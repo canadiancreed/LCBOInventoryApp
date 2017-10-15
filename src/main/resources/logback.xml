@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <property name="logging.path" value="${java.io.tmpdir}/lcboApp/resources/log"/>
+  <appender name="appender.stdout" class="ch.qos.logback.core.ConsoleAppender">
+    <layout class="ch.qos.logback.classic.PatternLayout">
+      <Pattern>
+        %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %class{36} %L - %msg%n
+      </Pattern>
+    </layout>
+  </appender>
+  <appender name="appender.file.debug"
+            class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${logging.path}/debug.log</file>
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+      <Pattern>
+        %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %class{36} %L - %msg%n
+      </Pattern>
+    </encoder>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <!-- roll over daily -->
+      <fileNamePattern>
+        ${logging.path}/debug.%d{yyyy-MM-dd}.%i.log
+      </fileNamePattern>
+      <timeBasedFileNamingAndTriggeringPolicy
+          class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+        <maxFileSize>10MB</maxFileSize>
+      </timeBasedFileNamingAndTriggeringPolicy>
+    </rollingPolicy>
+  </appender>
+  <appender name="appender.file.audit"
+            class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${logging.path}/audit.log</file>
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+      <Pattern>
+        %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %class{36} %L - %msg%n
+      </Pattern>
+    </encoder>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <!-- roll over daily -->
+      <fileNamePattern>
+        ${logging.path}/audit.%d{yyyy-MM-dd}.%i.log
+      </fileNamePattern>
+      <timeBasedFileNamingAndTriggeringPolicy
+          class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+        <maxFileSize>10MB</maxFileSize>
+      </timeBasedFileNamingAndTriggeringPolicy>
+    </rollingPolicy>
+  </appender>
+  <appender name="appender.file.error"
+            class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${logging.path}/error.log</file>
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+      <Pattern>
+        %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %class{36}.%M %L - %msg%n
+      </Pattern>
+    </encoder>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <!-- roll over daily -->
+      <fileNamePattern>
+        ${logging.path}/error.%d{yyyy-MM-dd}.%i.log
+      </fileNamePattern>
+      <timeBasedFileNamingAndTriggeringPolicy
+          class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+        <maxFileSize>10MB</maxFileSize>
+      </timeBasedFileNamingAndTriggeringPolicy>
+    </rollingPolicy>
+  </appender>
+  <!-- Send logs to both console and file audit -->
+  <logger name="com.creed.project.lcboapp" level="debug" additivity="false">
+    <appender-ref ref="appender.stdout"/>
+    <appender-ref ref="appender.file.debug"/>
+  </logger>
+  <root level="error">
+    <appender-ref ref="appender.stdout"/>
+    <appender-ref ref="appender.file.error"/>
+  </root>
+</configuration>

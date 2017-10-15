@@ -1,0 +1,2 @@
+- For some reason it's not loading the spring batch tables automatically.  Had to load the .sql files manually
+- Logging wasn't echoing to console. Found it was pointing to the incorrect package in logback.xml. Package change resolved issue
