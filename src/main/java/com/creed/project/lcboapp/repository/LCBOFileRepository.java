@@ -1,7 +1,11 @@
 package com.creed.project.lcboapp.repository;
 
 import com.creed.project.lcboapp.common.Constants;
-import org.apache.commons.io.FileUtils;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,16 +13,10 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
+import java.io.*;
+import java.nio.file.FileAlreadyExistsException;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static com.creed.project.lcboapp.common.Constants.PROP_LCBO_FEED_DOWNLOAD_DIR;
 
@@ -32,7 +30,9 @@ import static com.creed.project.lcboapp.common.Constants.PROP_LCBO_FEED_DOWNLOAD
 public class LCBOFileRepository {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LCBOFileRepository.class);
-    private static final Map<String, File> lcboFileRepository = new ConcurrentHashMap<>();
+    private static final byte[] buffer = new byte[1024];
+
+    private Map<String,String> jsonData = new HashMap<>();
 
     @Autowired
     private Environment environment;
@@ -65,216 +65,51 @@ public class LCBOFileRepository {
 
     /**
      * Download the latest file from the LCBO API source
+     *
+     * It does the following actions:
+     * - Craft the URL to download the latest zip file
+     * - Download the zip file and save it to the download directory
      */
-    public void downloadLatestLCBODataFile() {
-        // Clear repository of file data in repository map:
-        lcboFileRepository.clear();
+    public void downloadLatestLCBODataFile() throws FileAlreadyExistsException {
+        if (!doesFileExist()) {
+            CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 
-        //determine what file should be downloaded
+            HttpGet getFile = new HttpGet("http://static.lcboapi.com/datasets/1.zip");
 
-        //open connection to LCBO API and download file
-
-        try {
-            final String fileName = "1.zip";
-
-            URL url = new URL(environment.getRequiredProperty(Constants.PROP_LCBO_API_DATASET_URL) + fileName +
-                    "?access_key=" + environment.getRequiredProperty(Constants.PROP_LCBO_FEED_ACCESS_KEY));
-
-            try (BufferedInputStream bis = new BufferedInputStream(url.openStream())) {
-                try (FileOutputStream fis = new FileOutputStream(environment.getRequiredProperty(Constants.PROP_LCBO_FEED_DOWNLOAD_DIR) + fileName)) {
-
-                    byte[] buffer = new byte[1024];
-
-                    int count = 0;
-
-                    while ((count = bis.read(buffer, 0, 1024)) != -1) {
-                        fis.write(buffer, 0, count);
-                    }
-                }
+            try (CloseableHttpResponse response = httpClient.execute(getFile)) {
+                writeFile(response);
+            } catch (ClientProtocolException cpe) {
+                LOGGER.error("A client protocal issue occured.", cpe.getMessage());
             } catch (IOException ioe) {
-                LOGGER.debug("The file could not be created in the specified location. File location is ",
-                        ioe.getMessage());
+                LOGGER.error("Unable to access the file.", ioe.getMessage());
             }
-        } catch (MalformedURLException mURLe) {
-            LOGGER.debug("The URL is not valid. URL attempted is ", mURLe.getMessage());
+        } else {
+            throw new FileAlreadyExistsException("File already exists. File has not been moved to archive dir. Aborting.");
         }
     }
 
-    /**
-     * Unpack lcbo data file to working directory
-     */
-    public void unpackLCBODataFIleToWorkingDirectory() throws IOException {
-//        String workingDir = environment.getRequiredProperty(Constants.PROP_DESC_FEED_WORKING_DIR);
-//        FeedUtils.moveFiles(workingDir, lcboFileRepository);
-//
-//        // Debug Message
-//        for (Map.Entry<String, File> entry : lcboFileRepository.entrySet()) {
-//            LOGGER.debug("{}, {}", entry.getKey(), entry.getValue().getPath());
-//        }
-    }
+    private void writeFile(CloseableHttpResponse response) {
+        try (OutputStream output = new FileOutputStream(environment.getRequiredProperty(
+                Constants.PROP_LCBO_FEED_DOWNLOAD_DIR) +
+                File.separator + "1.zip")) {
+            final InputStream input = response.getEntity().getContent();
 
-    /**
-     * Insert all files in current LCBO data file collection into file repository
-     */
-    public void loadLCBOFileRepository() {
-//        // Get description feed input location path
-//        String inputDir = environment.getRequiredProperty(Constants.PROP_DESC_FEED_INPUT_DIR);
-//        LOGGER.debug("Input Path: {}", inputDir);
-//
-//        Map<String, File> fileMap = FeedUtils.getFeedFiles(inputDir);
-//
-//        // DPT-RULE-3 Policy: Feed Eligibility and Retries
-//        // A feed is considered eligible when
-//        // a)it has not previously been processed
-//        // b)it is not currently being processed
-//
-//        // Filtering Processed File
-//        for (Map.Entry<String, File> entry : fileMap.entrySet()) {
-//            try {
-//                String filename = entry.getValue().getName();
-//                Path path = Paths.get(entry.getValue().getAbsoluteFile().toURI());
-//                BasicFileAttributes attr = Files.readAttributes(path, BasicFileAttributes.class);
-//                Date creationTime = new Date(attr.creationTime().toMillis());
-//
-//                //Do we want to save the file data into db?
-//                //long count = feedJpaRepository.countByFeedFileNameAndFeedFileCreationTime(filename, creationTime);
-//
-//                LOGGER.debug("DESC Feed: {}, {}", filename, creationTime);
-//
-//                if (count < 1) {
-//                    lcboFileRepository.put(entry.getKey(), entry.getValue());
-//                    LOGGER.debug("DESC Feed: {}, {}", entry.getKey(), entry.getValue().getPath());
-//                }
-//            } catch (IOException e) {
-//                LOGGER.debug("{}", e.getMessage(), e);
-//            }
-//        }
-    }
-
-    /**
-     * Move latest data file to archive directory.
-     */
-    public void archiveLCBODataFile() throws IOException {
-
-    }
-
-    /**
-     * Delete all files in working directory.
-     */
-    public void clearWorkingDirectory() {
-
-    }
-
-    /**
-     * Returns current size of the repository
-     *
-     * @return size of feed repository
-     */
-    public int size() {
-        return lcboFileRepository.size();
-    }
-
-    /**
-     * @param feedId the feed id to get feed file
-     * @return file object if found, null otherwise
-     */
-    public File getFeedFile(final String feedId) {
-        if (feedId == null || feedId.isEmpty()) {
-            return null;
-        }
-        return lcboFileRepository.get(feedId);
-    }
-
-    /**
-     * @return the feed Id to process if exists, null otherwise
-     */
-    public String getNextFeedId() {
-        // check repository whether empty or not
-        if (lcboFileRepository.isEmpty()) {
-            return null;
-        }
-
-        String feedId = null;
-
-        for (Map.Entry<String, File> entry : lcboFileRepository.entrySet()) {
-            feedId = entry.getKey();
-            break;
-        }
-
-        // return feed if exist, null otherwise
-        return feedId;
-    }
-
-    /**
-     * Remove lcbo file feed in the repository
-     *
-     * @param feedId feed Id
-     * @return file if removed from feed repository, null otherwise
-     */
-    public File remove(String feedId) {
-        // validate feedId
-        if (feedId == null || feedId.isEmpty()) {
-            return null;
-        }
-
-        // Search feed and remove if exist
-        File feed = null;
-        if (lcboFileRepository.containsKey(feedId)) {
-            feed = lcboFileRepository.remove(feedId);
-        }
-
-        if (feed != null) {
-            FileUtils.deleteQuietly(feed);
-        }
-
-        // return removed feed if exists, null otherwise
-        return feed;
-    }
-
-    public void loadFileRepository() {
-    }
-
-    public void moveFeedFilesToWorkingDir() {
-    }
-
-    //Temp
-
-    // Using Java IO
-    public static void downloadFileFromUrlWithJavaIO(String fileName, String fileUrl)
-            throws MalformedURLException, IOException {
-        BufferedInputStream inStream = null;
-        FileOutputStream outStream = null;
-        try {
-            URL fileUrlObj=new URL(fileUrl);
-            inStream = new BufferedInputStream(fileUrlObj.openStream());
-            outStream = new FileOutputStream(fileName);
-
-            byte data[] = new byte[1024];
-            int count;
-            while ((count = inStream.read(data, 0, 1024)) != -1) {
-                outStream.write(data, 0, count);
+            for (int length; (length = input.read(buffer)) > 0; ) {
+                output.write(buffer, 0, length);
             }
-        } finally {
-            if (inStream != null)
-                inStream.close();
-            if (outStream != null)
-                outStream.close();
+
+            output.close();
+        } catch (FileNotFoundException fnfe) {
+            LOGGER.error("Unable to find file to write too.", fnfe.getMessage());
+        } catch (IOException ioe) {
+            LOGGER.error("Unable to write to the file.", ioe.getMessage());
         }
     }
 
-    // Using common IO
-    public static void downloadFileFromUrlWithCommonsIO(String fileName,
-                                                        String fileUrl) throws MalformedURLException, IOException {
-        FileUtils.copyURLToFile(new URL(fileUrl), new File(fileName));
-    }
+    private boolean doesFileExist() {
+        File file = new File(environment.getRequiredProperty(Constants.PROP_LCBO_FEED_DOWNLOAD_DIR) +
+                                File.separator + "1.zip");
 
-    // Using NIO
-    private static void downloadFileFromURLUsingNIO(String fileName,String fileUrl) throws IOException {
-        URL url = new URL(fileUrl);
-        ReadableByteChannel rbc = Channels.newChannel(url.openStream());
-        FileOutputStream fOutStream = new FileOutputStream(fileName);
-        fOutStream.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-        fOutStream.close();
-        rbc.close();
+        return file.exists();
     }
 }

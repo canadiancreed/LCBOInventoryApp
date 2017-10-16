@@ -14,11 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.TimeZone;
@@ -187,26 +182,26 @@ public class TransactionRepository {
         Calendar localDateTime = Calendar.getInstance(TimeZone.getTimeZone(timezone));
         Timestamp timestamp = new Timestamp(localDateTime.getTimeInMillis());
 
-        File file = lcboFileRepository.getFeedFile(feedId);
-        if (file != null) {
-            try {
-                String filename = file.getName();
-                BasicFileAttributes attr = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
-                Date creationTime = new Date(attr.creationTime().toMillis());
-                long transId = transactionEntity.getTransId();
-
-                feedEntity.setFeedFileName(filename);
-                feedEntity.setFeedFileCreationTime(creationTime);
-                feedEntity.setTransId(transId);
-                feedEntity.setFeedStatus(etlStatus.name());
-                feedEntity.setUpdatedDate(timestamp);
-
-                feedJpaRepository.save(feedEntity);
-
-                LOGGER.debug("LCBOApp Feed: {}", feedEntity);
-            } catch (IOException e) {
-                LOGGER.debug("{}", e.getMessage(), e);
-            }
-        }
+//        File file = lcboFileRepository.getFeedFile(feedId);
+//        if (file != null) {
+//            try {
+//                String filename = file.getName();
+//                BasicFileAttributes attr = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
+//                Date creationTime = new Date(attr.creationTime().toMillis());
+//                long transId = transactionEntity.getTransId();
+//
+//                feedEntity.setFeedFileName(filename);
+//                feedEntity.setFeedFileCreationTime(creationTime);
+//                feedEntity.setTransId(transId);
+//                feedEntity.setFeedStatus(etlStatus.name());
+//                feedEntity.setUpdatedDate(timestamp);
+//
+//                feedJpaRepository.save(feedEntity);
+//
+//                LOGGER.debug("LCBOApp Feed: {}", feedEntity);
+//            } catch (IOException e) {
+//                LOGGER.debug("{}", e.getMessage(), e);
+//            }
+//        }
     }
 }
