@@ -17,8 +17,7 @@ import java.io.*;
 import java.nio.file.FileAlreadyExistsException;
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.creed.project.lcboapp.common.Constants.PROP_LCBO_FEED_DOWNLOAD_DIR;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * This class handles all details for the particular actions performed on files for this ETL
@@ -31,6 +30,8 @@ public class LCBOFileRepository {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LCBOFileRepository.class);
     private static final byte[] buffer = new byte[1024];
+
+    private static final Map<String, File> currentLCBOFileRepository = new ConcurrentHashMap<>();
 
     private Map<String,String> jsonData = new HashMap<>();
 
@@ -52,7 +53,7 @@ public class LCBOFileRepository {
         LOGGER.debug("Using PROP_LCBO_FEED_ARCHIVE_DIR: {}",
                 environment.getRequiredProperty(Constants.PROP_LCBO_FEED_ARCHIVE_DIR));
         LOGGER.debug("Using PROP_LCBO_FEED_DOWNLOAD_DIR: {}",
-                environment.getRequiredProperty(PROP_LCBO_FEED_DOWNLOAD_DIR));
+                environment.getRequiredProperty(Constants.PROP_LCBO_FEED_DOWNLOAD_DIR));
         LOGGER.debug("Using PROP_LCBO_FEED_WORKING_DIR: {}",
                 environment.getRequiredProperty(Constants.PROP_LCBO_FEED_WORKING_DIR));
         LOGGER.debug("Using PROP_LCBO_INVENTORY_FEED_LINE_TO_SKIP: {}",
@@ -62,6 +63,23 @@ public class LCBOFileRepository {
         LOGGER.debug("Using PROP_LCBO_STORE_FEED_LINE_TO_SKIP: {}",
                 environment.getRequiredProperty(Constants.PROP_LCBO_STORE_FEED_LINE_TO_SKIP));
     }
+
+//    public void loadFileRepository() {
+//        // Clear repository before loading file list:
+//        fileRepository.clear();
+//
+//        String ocsInputDir = environment.getRequiredProperty(Constants.PROP_COST_OCS_FEED_INPUT_DIR);
+//        String mfgInputDir = environment.getRequiredProperty(Constants.PROP_COST_MFG_FEED_INPUT_DIR);
+//
+//        LOGGER.debug("OCS Input Path: {}", ocsInputDir);
+//        LOGGER.debug("MFG Input Path: {}", mfgInputDir);
+//
+//        filterFeedFiles(CostType.OCS, FeedUtils.getFeedFiles(ocsInputDir));
+//        filterFeedFiles(CostType.MANUFACTURING, FeedUtils.getFeedFiles(mfgInputDir));
+//    }
+
+
+    //Public methods - Sorted by order of operation in app
 
     /**
      * Download the latest file from the LCBO API source
@@ -87,6 +105,8 @@ public class LCBOFileRepository {
             throw new FileAlreadyExistsException("File already exists. File has not been moved to archive dir. Aborting.");
         }
     }
+
+    //Helper Methods - Sort by letter
 
     private void writeFile(CloseableHttpResponse response) {
         try (OutputStream output = new FileOutputStream(environment.getRequiredProperty(
