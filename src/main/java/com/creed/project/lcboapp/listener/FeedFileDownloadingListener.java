@@ -12,6 +12,8 @@ public class FeedFileDownloadingListener implements StepExecutionListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FeedFileDownloadingListener.class);
 
+    private long timestamp;
+
     /**
      * Default Constructor
      */
@@ -22,11 +24,14 @@ public class FeedFileDownloadingListener implements StepExecutionListener {
     @Override
     public void beforeStep(final StepExecution stepExecution) {
         LOGGER.debug(">>>>>>>>>> Begin LCBO Feed File Downloading Step");
+
+        timestamp = System.currentTimeMillis();
     }
 
     @Override
     public ExitStatus afterStep(final StepExecution stepExecution) {
-        LOGGER.debug(">>>>>>>>>> End LCBO Feed File Downloading Step");
+        LOGGER.debug(">>>>>>>>>> End LCBO Feed File Downloading Step. Time Elasped: ()",
+                        System.currentTimeMillis() - timestamp);
 
         return null;
     }

@@ -54,15 +54,6 @@ public class FeedFileDownloadingTasklet implements Tasklet, InitializingBean {
 
         lcboFileRepository.downloadLatestLCBODataFile();
 
-
-//        lcboFileRepository.loadFileRepository();
-//
-//        if (lcboFileRepository.size() > 0) {
-//            transactionRepository.beginTransaction();
-//            dataRepository.extractCostData(transactionRepository.getTransactionId());
-//            lcboFileRepository.moveFeedFilesToWorkingDir();
-//        }
-
         return RepeatStatus.FINISHED;
     }
 }
