@@ -8,10 +8,7 @@ import com.creed.project.lcboapp.policy.FeedItemSkipPolicy;
 import com.creed.project.lcboapp.processor.InventoryItemProcessor;
 import com.creed.project.lcboapp.processor.ProductItemProcessor;
 import com.creed.project.lcboapp.processor.StoreItemProcessor;
-import com.creed.project.lcboapp.tasklet.FeedFileArchivingTasklet;
-import com.creed.project.lcboapp.tasklet.FeedFileDownloadingTasklet;
-import com.creed.project.lcboapp.tasklet.FeedFileLoadingTasklet;
-import com.creed.project.lcboapp.tasklet.FeedFileUnpackingTasklet;
+import com.creed.project.lcboapp.tasklet.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,7 +42,7 @@ public class BatchConfiguration {
     /**
      * Create description job execution listener bean
      *
-     * @return ETLJobExecutionListener
+     * @return FeedFileDownloadingListener
      */
     @Bean
     public FeedFileDownloadingListener feedFileDownloadingListener() {
@@ -55,11 +52,21 @@ public class BatchConfiguration {
     /**
      * Create description job execution listener bean
      *
-     * @return ETLJobExecutionListener
+     * @return FeedFileUnpackingListener
      */
     @Bean
     public FeedFileUnpackingListener feedFileUnpackingListener() {
         return new FeedFileUnpackingListener();
+    }
+
+    /**
+     * Create retrieving file listing tasklet bean
+     *
+     * @return FeedFileRetrievingTasklet
+     */
+    @Bean
+    public FeedFileRetrievingListener feedFileRetrievingListener() {
+        return new FeedFileRetrievingListener();
     }
 
     /**
@@ -97,7 +104,7 @@ public class BatchConfiguration {
     /**
      * Create description file listing tasklet bean
      *
-     * @return DescriptionFileValidatingTasklet
+     * @return FeedFileDownloadingTasklet
      */
     @Bean
     public FeedFileDownloadingTasklet feedFileDownloadingTasklet() {
@@ -107,7 +114,7 @@ public class BatchConfiguration {
     /**
      * Create description file listing tasklet bean
      *
-     * @return DescriptionFileValidatingTasklet
+     * @return FeedFileUnpackingTasklet
      */
     @Bean
     public FeedFileUnpackingTasklet feedFileUnpackingTasklet() {
@@ -115,9 +122,19 @@ public class BatchConfiguration {
     }
 
     /**
+     * Create retrieving file listing tasklet bean
+     *
+     * @return FeedFileRetrievingTasklet
+     */
+    @Bean
+    public FeedFileRetrievingTasklet feedFileRetrievingTasklet() {
+        return new FeedFileRetrievingTasklet();
+    }
+
+    /**
      * Create description file listing tasklet bean
      *
-     * @return DescriptionFileValidatingTasklet
+     * @return FeedFileLoadingTasklet
      */
     @Bean
     public FeedFileLoadingTasklet feedFileLoadingTasklet() {
@@ -127,7 +144,7 @@ public class BatchConfiguration {
     /**
      * Create description file listing tasklet bean
      *
-     * @return DescriptionFileValidatingTasklet
+     * @return FeedFileArchivingTasklet
      */
     @Bean
     public FeedFileArchivingTasklet feedFileArchivingTasklet() {

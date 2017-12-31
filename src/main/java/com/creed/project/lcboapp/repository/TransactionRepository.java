@@ -14,6 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.TimeZone;
@@ -65,10 +70,11 @@ public class TransactionRepository {
      *
      * @param loaderStatus the load progress status
      */
-    public void processTransaction(String loaderStatus) {
+    public void processTransaction(final String loaderStatus) {
         if (transactionEntity.getTransId() == null) {
             return;
         }
+
         trailTransaction(loaderStatus, ETLStatus.PROCESSING);
     }
 
@@ -77,10 +83,11 @@ public class TransactionRepository {
      *
      * @param loaderStatus the load progress status
      */
-    public void failTransaction(String loaderStatus) {
+    public void failTransaction(final String loaderStatus) {
         if (transactionEntity.getTransId() == null) {
             return;
         }
+
         trailTransaction(loaderStatus, ETLStatus.FAILED);
     }
 
@@ -91,6 +98,7 @@ public class TransactionRepository {
         if (transactionEntity.getTransId() == null) {
             return;
         }
+
         trailTransaction(ETLStatus.COMPLETED.name(), ETLStatus.COMPLETED);
     }
 
@@ -98,7 +106,7 @@ public class TransactionRepository {
      * @param loaderStatus the load progress status
      * @param etlStatus    the ETL status
      */
-    private void trailTransaction(String loaderStatus, ETLStatus etlStatus) {
+    private void trailTransaction(final String loaderStatus, final ETLStatus etlStatus) {
         // Get current time
         String timezone = environment.getRequiredProperty(Constants.PROP_TIME_ZONE);
         Calendar localDateTime = Calendar.getInstance(TimeZone.getTimeZone(timezone));
@@ -132,7 +140,7 @@ public class TransactionRepository {
     /**
      * Log Begin of Feed's Transaction
      */
-    public void beginFeedTransaction(String feedId) {
+    public void beginFeedTransaction(final String feedId) {
         LCBOAppFeedEntity entity = new LCBOAppFeedEntity();
         BeanUtils.copyProperties(entity, feedEntity);
         trailFeedTransaction(feedId, ETLStatus.STARTED);
@@ -143,10 +151,11 @@ public class TransactionRepository {
      *
      * @param feedId the feed Id
      */
-    public void processFeedTransaction(String feedId) {
+    public void processFeedTransaction(final String feedId) {
         if (transactionEntity.getTransId() == null) {
             return;
         }
+
         trailFeedTransaction(feedId, ETLStatus.PROCESSING);
     }
 
@@ -159,6 +168,7 @@ public class TransactionRepository {
         if (transactionEntity.getTransId() == null) {
             return;
         }
+
         trailFeedTransaction(feedId, ETLStatus.FAILED);
     }
 
@@ -169,6 +179,7 @@ public class TransactionRepository {
         if (transactionEntity.getTransId() == null) {
             return;
         }
+
         trailFeedTransaction(feedId, ETLStatus.COMPLETED);
     }
 
@@ -176,32 +187,32 @@ public class TransactionRepository {
      * @param feedId    the feed Id
      * @param etlStatus the ETL status
      */
-    private void trailFeedTransaction(String feedId, ETLStatus etlStatus) {
+    private void trailFeedTransaction(final String feedId, final ETLStatus etlStatus) {
         // Get current time
         String timezone = environment.getRequiredProperty(Constants.PROP_TIME_ZONE);
         Calendar localDateTime = Calendar.getInstance(TimeZone.getTimeZone(timezone));
         Timestamp timestamp = new Timestamp(localDateTime.getTimeInMillis());
 
-//        File file = lcboFileRepository.getFeedFile(feedId);
-//        if (file != null) {
-//            try {
-//                String filename = file.getName();
-//                BasicFileAttributes attr = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
-//                Date creationTime = new Date(attr.creationTime().toMillis());
-//                long transId = transactionEntity.getTransId();
-//
-//                feedEntity.setFeedFileName(filename);
-//                feedEntity.setFeedFileCreationTime(creationTime);
-//                feedEntity.setTransId(transId);
-//                feedEntity.setFeedStatus(etlStatus.name());
-//                feedEntity.setUpdatedDate(timestamp);
-//
-//                feedJpaRepository.save(feedEntity);
-//
-//                LOGGER.debug("LCBOApp Feed: {}", feedEntity);
-//            } catch (IOException e) {
-//                LOGGER.debug("{}", e.getMessage(), e);
-//            }
-//        }
+        File file = lcboFileRepository.getFeedFile(feedId);
+        if (file != null) {
+            try {
+                String filename = file.getName();
+                BasicFileAttributes attr = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
+                Date creationTime = new Date(attr.creationTime().toMillis());
+                long transId = transactionEntity.getTransId();
+
+                feedEntity.setFeedFileName(filename);
+                feedEntity.setFeedFileCreationTime(creationTime);
+                feedEntity.setTransId(transId);
+                feedEntity.setFeedStatus(etlStatus.name());
+                feedEntity.setUpdatedDate(timestamp);
+
+                feedJpaRepository.save(feedEntity);
+
+                LOGGER.debug("LCBOApp Feed: {}", feedEntity);
+            } catch (IOException e) {
+                LOGGER.debug("{}", e.getMessage(), e);
+            }
+        }
     }
 }

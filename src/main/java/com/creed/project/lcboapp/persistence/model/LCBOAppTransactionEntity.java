@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "LCBOAPP_TRANS")
+@Table(name = "LCBO_APP_TRANS")
 public class LCBOAppTransactionEntity {
 
     @Id
@@ -139,7 +139,7 @@ public class LCBOAppTransactionEntity {
 
     @Override
     public String toString() {
-        return "CostTransactionEntity{" +
+        return "LCBOAppTransactionEntity{" +
                 "transId=" + transId +
                 ", loaderStatus='" + loaderStatus + '\'' +
                 ", readyForPickup='" + readyForPickup + '\'' +

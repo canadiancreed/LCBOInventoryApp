@@ -1,5 +1,7 @@
 package com.creed.project.lcboapp.domain;
 
+import java.util.Date;
+
 public class LCBOStore {
 
 	private Long id;
@@ -9,7 +11,7 @@ public class LCBOStore {
 	private String postalCode;
 	private String latitude;
 	private String longitude;
-	private String updatedAt; //Convert to Date
+	private Date updatedAt;
 
 	/**
 	 * Default Constructor
@@ -20,9 +22,7 @@ public class LCBOStore {
 		return id;
 	}
 
-	public String getAddressLineOne() {
-		return addressLineOne;
-	}
+	public String getAddressLineOne() { return addressLineOne; }
 
 	public String getAddressLineTwo() {
 		return addressLineTwo;
@@ -44,7 +44,7 @@ public class LCBOStore {
 		return longitude;
 	}
 
-	public String getUpdatedAt() {
+	public Date getUpdatedAt() {
 		return updatedAt;
 	}
 
@@ -76,14 +76,22 @@ public class LCBOStore {
 		this.longitude = longitude;
 	}
 
-	public void setUpdatedAt(final String updatedAt) {
+	public void setUpdatedAt(final Date updatedAt) {
 		this.updatedAt = updatedAt;
 	}
 
 	@Override
 	public String toString() {
-		return "StoreDBModel [id=" + id + ", addressLineOne=" + addressLineOne + ", city=" + city 
-				+ ", postalCode=" + postalCode + ", latitude=" + latitude + ", longitude="
-				+ longitude + ", updatedAt=" + updatedAt + "]";
+		final StringBuilder sb = new StringBuilder("LCBOStore{");
+		sb.append("id=").append(id);
+		sb.append(", addressLineOne='").append(addressLineOne).append('\'');
+		sb.append(", addressLineTwo='").append(addressLineTwo).append('\'');
+		sb.append(", city='").append(city).append('\'');
+		sb.append(", postalCode='").append(postalCode).append('\'');
+		sb.append(", latitude='").append(latitude).append('\'');
+		sb.append(", longitude='").append(longitude).append('\'');
+		sb.append(", updatedAt=").append(updatedAt);
+		sb.append('}');
+		return sb.toString();
 	}
 }

@@ -1,5 +1,7 @@
 package com.creed.project.lcboapp.domain;
 
+import java.util.Date;
+
 /**
  * Old product files are missing the last four Columns and don't have the same column layout.
  * Will need to do custom readers and identify how to tell the difference.
@@ -19,8 +21,8 @@ public class LCBOProduct {
 	private String secondaryCategory;
 	private String origin;
 	private String producerName;
-	private String releasedOn; //Convert to Date
-	private String updatedAt; //Convert to Date
+	private Date releasedOn;
+	private Date updatedAt;
 	private String imageUrl;
 	private String varietal;
 	private String style;
@@ -63,11 +65,11 @@ public class LCBOProduct {
 		return producerName;
 	}
 
-	public String getReleasedOn() {
+	public Date getReleasedOn() {
 		return releasedOn;
 	}
 
-	public String getUpdatedAt() {
+	public Date getUpdatedAt() {
 		return updatedAt;
 	}
 
@@ -119,15 +121,9 @@ public class LCBOProduct {
 		this.producerName = producerName;
 	}
 
-	public void setReleasedOn(String releasedOn) {
-		if (releasedOn.isEmpty()) {
-			this.releasedOn = null;
-		} else {
-			this.releasedOn = releasedOn;
-		}
-	}
+	public void setReleasedOn(Date releasedOn) { this.releasedOn = releasedOn; }
 
-	public void setUpdatedAt(String updatedAt) {
+	public void setUpdatedAt(Date updatedAt) {
 		this.updatedAt = updatedAt;
 	}
 
@@ -149,10 +145,21 @@ public class LCBOProduct {
 
 	@Override
 	public String toString() {
-		return "ProductDBModel [id=" + id + ", name=" + name + ", priceInCents=" + priceInCents
-				+ ", regularPriceInCents=" + regularPriceInCents + ", primaryCategory=" + primaryCategory
-				+ ", secondaryCategory=" + secondaryCategory + ", origin=" + origin + ", producerName=" + producerName
-				+ ", releasedOn=" + releasedOn + ", updatedAt=" + updatedAt + ", imageUrl=" + imageUrl + ", varietal="
-				+ varietal + ", style=" + style + ", tertiaryCategory=" + tertiaryCategory + "]";
+		return "LCBOProduct{" +
+				"id=" + id +
+				", name='" + name + '\'' +
+				", priceInCents=" + priceInCents +
+				", regularPriceInCents=" + regularPriceInCents +
+				", primaryCategory='" + primaryCategory + '\'' +
+				", secondaryCategory='" + secondaryCategory + '\'' +
+				", origin='" + origin + '\'' +
+				", producerName='" + producerName + '\'' +
+				", releasedOn=" + releasedOn +
+				", updatedAt=" + updatedAt +
+				", imageUrl='" + imageUrl + '\'' +
+				", varietal='" + varietal + '\'' +
+				", style='" + style + '\'' +
+				", tertiaryCategory='" + tertiaryCategory + '\'' +
+				'}';
 	}
 }

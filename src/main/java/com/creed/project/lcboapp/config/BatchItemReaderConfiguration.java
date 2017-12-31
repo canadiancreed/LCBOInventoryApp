@@ -1,10 +1,10 @@
 package com.creed.project.lcboapp.config;
 
 import com.creed.project.lcboapp.common.Constants;
-import com.creed.project.lcboapp.domain.LCBOFileType;
 import com.creed.project.lcboapp.domain.LCBOInventory;
 import com.creed.project.lcboapp.domain.LCBOProduct;
 import com.creed.project.lcboapp.domain.LCBOStore;
+import com.creed.project.lcboapp.domain.model.LCBOFileTypeModel;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.mapping.FieldSetMapper;
@@ -38,17 +38,17 @@ public class BatchItemReaderConfiguration {
      * @return the LCBO Data File Reader EnumMap
      */
     @Bean
-    public Map<LCBOFileType, FlatFileItemReader> feedItemReaderMap(
+    public Map<LCBOFileTypeModel, FlatFileItemReader> feedItemReaderMap(
             @Qualifier("inventoryFeedFileItemReader") FlatFileItemReader<LCBOInventory> inventoryFeedFileItemReader,
             @Qualifier("productFeedFileItemReader") FlatFileItemReader<LCBOProduct> productFeedFileItemReader,
             @Qualifier("storeFeedFileItemReader") FlatFileItemReader<LCBOStore> storeFeedFileItemReader
     ) {
 
-        Map<LCBOFileType, FlatFileItemReader> feedItemReaderMap = new EnumMap<>(LCBOFileType.class);
+        Map<LCBOFileTypeModel, FlatFileItemReader> feedItemReaderMap = new EnumMap<>(LCBOFileTypeModel.class);
 
-        feedItemReaderMap.put(LCBOFileType.INVENTORY, inventoryFeedFileItemReader);
-        feedItemReaderMap.put(LCBOFileType.PRODUCT, productFeedFileItemReader);
-        feedItemReaderMap.put(LCBOFileType.STORE, storeFeedFileItemReader);
+        feedItemReaderMap.put(LCBOFileTypeModel.INVENTORY, inventoryFeedFileItemReader);
+        feedItemReaderMap.put(LCBOFileTypeModel.PRODUCT, productFeedFileItemReader);
+        feedItemReaderMap.put(LCBOFileTypeModel.STORE, storeFeedFileItemReader);
 
         return feedItemReaderMap;
     }

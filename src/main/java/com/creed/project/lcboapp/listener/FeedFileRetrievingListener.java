@@ -1,6 +1,6 @@
 package com.creed.project.lcboapp.listener;
 
-import com.creed.project.lcboapp.common.ETLStatus;
+import com.creed.project.lcboapp.common.Constants;
 import com.creed.project.lcboapp.domain.model.LCBOFileTypeModel;
 import com.creed.project.lcboapp.repository.TransactionRepository;
 import org.slf4j.Logger;
@@ -16,9 +16,9 @@ import org.springframework.context.annotation.Scope;
 import java.util.List;
 
 @Scope(value = "step")
-public class FeedFileDownloadingListener implements StepExecutionListener {
+public class FeedFileRetrievingListener implements StepExecutionListener {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(FeedFileDownloadingListener.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FeedFileRetrievingListener.class);
 
     @Autowired
     private TransactionRepository transactionRepository;
@@ -28,21 +28,21 @@ public class FeedFileDownloadingListener implements StepExecutionListener {
     /**
      * Default Constructor
      */
-    public FeedFileDownloadingListener() {
+    public FeedFileRetrievingListener() {
         super();
     }
 
     @Override
     public void beforeStep(final StepExecution stepExecution) {
-        LOGGER.debug(">>>>>>>>>> Begin LCBO Feed File Downloading Step");
+        LOGGER.debug(">>>>>>>>>> Begin LCBO Feed File Retrieving Step");
 
         timestamp = System.currentTimeMillis();
     }
 
     @Override
     public ExitStatus afterStep(final StepExecution stepExecution) {
-        // Get feedId from job execution context
 
+        // Get feedId from job execution context
         JobExecution jobExecution = stepExecution.getJobExecution();
         ExecutionContext jobContext = jobExecution.getExecutionContext();
         List<Throwable> exceptions = stepExecution.getFailureExceptions();
@@ -51,14 +51,24 @@ public class FeedFileDownloadingListener implements StepExecutionListener {
         LCBOFileTypeModel lcboFileType = (LCBOFileTypeModel) jobContext.get("lcboFileType");
         Long transactionId = transactionRepository.getTransactionId();
 
+        ExitStatus exitStatus;
         if (!exceptions.isEmpty()) {
-            transactionRepository.failTransaction(ETLStatus.UNKNOWN.toString());
+            transactionRepository.failTransaction(feedId);
+            exitStatus = new ExitStatus(Constants.STEP_EXIT_STATUS_FAILED);
+        } else {
+            if (feedId == null || feedId.isEmpty()) {
+                transactionRepository.endTransaction();
+                exitStatus = new ExitStatus(Constants.STEP_EXIT_STATUS_COMPLETED);
+            } else {
+                transactionRepository.beginFeedTransaction(feedId);
+                exitStatus = new ExitStatus(lcboFileType.getName());
+            }
         }
 
         LOGGER.debug("LCBO File Type Feed Id: {}, LCBO File Type: {}, Trans Id: {}, Elapsed: {}",
                 feedId, lcboFileType, transactionId, System.currentTimeMillis() - timestamp);
-        LOGGER.debug(">>>>>>>>>> End LCBO Feed File Downloading Step.");
+        LOGGER.debug(">>>>>>>>>> End LCBO Feed File Retrieving Step.");
 
-        return null;
+        return exitStatus;
     }
 }

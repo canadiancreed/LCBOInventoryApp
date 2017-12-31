@@ -1,8 +1,6 @@
 package com.creed.project.lcboapp.tasklet;
 
-import com.creed.project.lcboapp.repository.DataRepository;
 import com.creed.project.lcboapp.repository.LCBOFileRepository;
-import com.creed.project.lcboapp.repository.TransactionRepository;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
@@ -14,12 +12,6 @@ public class FeedFileDownloadingTasklet implements Tasklet, InitializingBean {
 
     @Autowired
     private LCBOFileRepository lcboFileRepository;
-
-    @Autowired
-    private DataRepository dataRepository;
-
-    @Autowired
-    private TransactionRepository transactionRepository;
 
     /**
      * Default Constructor

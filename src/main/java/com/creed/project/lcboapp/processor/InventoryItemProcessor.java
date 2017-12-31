@@ -1,8 +1,10 @@
 package com.creed.project.lcboapp.processor;
 
 import com.creed.project.lcboapp.domain.LCBOInventory;
+import com.creed.project.lcboapp.persistence.model.LCBOInventoryEntity;
 import com.creed.project.lcboapp.repository.DataRepository;
 import com.creed.project.lcboapp.repository.TransactionRepository;
+import com.creed.project.lcboapp.validator.LCBOInventoryDataFeedValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemProcessor;
@@ -29,6 +31,25 @@ public class InventoryItemProcessor implements ItemProcessor<LCBOInventory, LCBO
 
     @Override
     public LCBOInventory process(final LCBOInventory inventory) throws Exception {
-        return null;
+
+        LCBOInventoryDataFeedValidator.validateAllBizRules(inventory);
+
+        LCBOInventoryEntity lcboInventoryEntity = new LCBOInventoryEntity();
+
+        lcboInventoryEntity.setProductID(inventory.getProductID());
+        lcboInventoryEntity.setStoreID(inventory.getStoreID());
+        lcboInventoryEntity.setQuantity(inventory.getQuantity());
+        lcboInventoryEntity.setUpdatedOn(inventory.getUpdatedOn());
+        lcboInventoryEntity.setCreatedAt(inventory.getCreatedAt());
+        lcboInventoryEntity.setUpdatedAt(inventory.getUpdatedAt());
+
+//        Long transId = transactionRepository.getTransactionId();
+//        Long feedId = transactionRepository.getTransactionFeedId();
+//        String lcboDataFileName = transactionRepository.getTransactionFeedFileName();
+        dataRepository.addEntity(lcboInventoryEntity);
+
+        LOGGER.debug("{}", lcboInventoryEntity);
+
+        return inventory;
     }
 }

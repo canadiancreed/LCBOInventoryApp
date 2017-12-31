@@ -126,6 +126,8 @@ public class JpaRepositoryConfiguration {
                 environment.getRequiredProperty(Constants.PROP_HIBERNATE_FORMAT_SQL));
         properties.put(Constants.PROP_HIBERNATE_COMMENT,
                 environment.getRequiredProperty(Constants.PROP_HIBERNATE_COMMENT));
+        properties.put(Constants.PROP_HIBERNATE_GENERATE_DDL,
+                environment.getRequiredProperty(Constants.PROP_HIBERNATE_GENERATE_DDL));
         properties.put(Constants.PROP_HIBERNATE_ID_NEW_GENERATOR_MAPPING,
                 environment.getRequiredProperty(Constants.PROP_HIBERNATE_ID_NEW_GENERATOR_MAPPING));
 

@@ -5,7 +5,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "COST_FEED")
+@Table(name = "LCBO_APP_FEED")
 public class LCBOAppFeedEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -144,7 +144,7 @@ public class LCBOAppFeedEntity {
 
     @Override
     public String toString() {
-        return "CostFeedEntity{" +
+        return "LCBOAppFeedEntity{" +
                 "feedId=" + feedId +
                 ", feedFileName='" + feedFileName + '\'' +
                 ", feedFileCreationTime=" + feedFileCreationTime +

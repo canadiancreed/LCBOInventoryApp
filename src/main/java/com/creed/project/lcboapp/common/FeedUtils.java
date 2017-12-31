@@ -13,9 +13,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -39,7 +38,7 @@ public final class FeedUtils {
      * @param inputDir the input directory
      * @return the file map
      */
-    public static Map<String, File> getFeedFiles(String inputDir) {
+    public static Map<String, File> getFeedFiles(final String inputDir) {
 
         Map<String, File> fileMap = new HashMap<>();
 
@@ -68,7 +67,7 @@ public final class FeedUtils {
      * @param status the ETL status
      * @return the flag base on ETL Status
      */
-    public static String getReadyForPickupFlag(ETLStatus status) {
+    public static String getReadyForPickupFlag(final ETLStatus status) {
         Flag flag;
 
         if (ETLStatus.COMPLETED == status) {

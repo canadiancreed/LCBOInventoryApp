@@ -1,10 +1,9 @@
 package com.creed.project.lcboapp.config;
 
+import com.creed.project.lcboapp.common.Constants;
+import com.creed.project.lcboapp.domain.model.LCBOFileTypeModel;
 import com.creed.project.lcboapp.listener.*;
-import com.creed.project.lcboapp.tasklet.FeedFileArchivingTasklet;
-import com.creed.project.lcboapp.tasklet.FeedFileDownloadingTasklet;
-import com.creed.project.lcboapp.tasklet.FeedFileLoadingTasklet;
-import com.creed.project.lcboapp.tasklet.FeedFileUnpackingTasklet;
+import com.creed.project.lcboapp.tasklet.*;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -52,6 +51,7 @@ public class BatchJobConfiguration {
     @Bean
     public Job importLCBODataFeed(@Qualifier("feedFileDownloading") Step feedFileDownloading,
                                   @Qualifier("feedFileUnpacking") Step feedFileUnpacking,
+                                  @Qualifier("feedFileRetrieving") Step feedFileRetrieving,
                                   @Qualifier("feedInventoryFileTransforming") Step feedInventoryFileTransforming,
                                   @Qualifier("feedProductFileTransforming") Step feedProductFileTransforming,
                                   @Qualifier("feedStoreFileTransforming") Step feedStoreFileTransforming,
@@ -64,24 +64,25 @@ public class BatchJobConfiguration {
                                 .listener(listener)
 
                                 .flow(feedFileDownloading)
-//                                .next(feedFileUnpacking)
+                                .next(feedFileUnpacking)
+                                .next(feedFileRetrieving)
 
-//                                .from(feedFileUnpacking).on(Constants.STEP_EXIT_STATUS_COMPLETED)
-//                                .end()
-//
-//                                .from(feedFileUnpacking).on(LCBOFileType.INVENTORY.getType())
-//                                .to(feedInventoryFileTransforming)
-//                                .next(feedFileLoading)
-//
-//                                .from(feedFileUnpacking).on(LCBOFileType.PRODUCT.getType())
-//                                .to(feedProductFileTransforming)
-//                                .next(feedFileLoading)
-//
-//                                .from(feedFileUnpacking).on(LCBOFileType.STORE.getType())
-//                                .to(feedStoreFileTransforming)
-//                                .next(feedFileLoading)
-//
-//                                .next(feedFileArchiving)
+                                .from(feedFileRetrieving).on(Constants.STEP_EXIT_STATUS_COMPLETED)
+                                .end()
+
+                                .from(feedFileRetrieving).on(LCBOFileTypeModel.INVENTORY.getName())
+                                .to(feedInventoryFileTransforming)
+                                .next(feedFileLoading)
+
+                                .from(feedFileRetrieving).on(LCBOFileTypeModel.PRODUCT.getName())
+                                .to(feedProductFileTransforming)
+                                .next(feedFileLoading)
+
+                                .from(feedFileRetrieving).on(LCBOFileTypeModel.STORE.getName())
+                                .to(feedStoreFileTransforming)
+                                .next(feedFileLoading)
+
+                                .next(feedFileArchiving)
 //                                .next(feedFileDownloading)
                                 .build()
 
@@ -106,7 +107,7 @@ public class BatchJobConfiguration {
 
     /**
      * Create file unpacking step bean
-     *
+     *1
      * @param tasklet  LCBO file unpacking tasklet
      * @param listener LCBO file unpacking listener
      * @return unpacking LCBO data file step
@@ -115,6 +116,22 @@ public class BatchJobConfiguration {
     public Step feedFileUnpacking(@Qualifier("feedFileUnpackingTasklet") FeedFileUnpackingTasklet tasklet,
                                   @Qualifier("feedFileUnpackingListener") FeedFileUnpackingListener listener) {
         return stepBuilderFactory.get("Unpacking LCBO File Data")
+                .tasklet(tasklet)
+                .listener(listener)
+                .build();
+    }
+
+    /**
+     * Create file unpacking step bean
+     *1
+     * @param tasklet  LCBO file unpacking tasklet
+     * @param listener LCBO file unpacking listener
+     * @return unpacking LCBO data file step
+     */
+    @Bean
+    public Step feedFileRetrieving(@Qualifier("feedFileRetrievingTasklet") FeedFileRetrievingTasklet tasklet,
+                                  @Qualifier("feedFileRetrievingListener") FeedFileRetrievingListener listener) {
+        return stepBuilderFactory.get("Retrieving LCBO File Data")
                 .tasklet(tasklet)
                 .listener(listener)
                 .build();

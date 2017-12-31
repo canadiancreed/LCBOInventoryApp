@@ -44,7 +44,7 @@ public class FeedImportJobRunnable {
     public void runLCBOImportJob() {
         if (!processing.get()) {
             processing.set(true);
-            launchCostFeedImportJob();
+            launchLCBOFeedImportJob();
         } else {
             LOGGER.debug("Job execution already running...");
         }
@@ -53,7 +53,7 @@ public class FeedImportJobRunnable {
     /**
      * Runs LCBO Feed Import Job
      */
-    private void launchCostFeedImportJob() {
+    private void launchLCBOFeedImportJob() {
         try {
             // Add timestamp as a job parameter to make the job unique
             JobParameters jobParameters = new JobParametersBuilder()
