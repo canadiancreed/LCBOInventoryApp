@@ -1,7 +1,8 @@
 package com.creed.project.lcboapp.tasklet;
 
-import com.creed.project.lcboapp.common.FeedUtils;
+import com.creed.project.lcboapp.common.Constants;
 import com.creed.project.lcboapp.repository.LCBOFileRepository;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.StepContribution;
@@ -11,10 +12,16 @@ import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+
+import java.io.File;
 
 public class FeedFileArchivingTasklet implements Tasklet, InitializingBean {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FeedFileArchivingTasklet.class);
+
+    @Autowired
+    private Environment environment;
 
     @Autowired
     private LCBOFileRepository lcboFileRepository;
@@ -35,18 +42,39 @@ public class FeedFileArchivingTasklet implements Tasklet, InitializingBean {
     public RepeatStatus execute(final StepContribution contribution, final ChunkContext chunkContext) throws Exception {
 
         // get feedId from job execution context
-        ExecutionContext context = chunkContext.getStepContext()
+        ExecutionContext jobContext = chunkContext.getStepContext()
                 .getStepExecution()
                 .getJobExecution()
                 .getExecutionContext();
 
-        String feedId = (String) context.get("feedId");
+        String feedId = (String) jobContext.get("lcboFileID");
+        String currentZipFileName = (String) jobContext.get("zipFileName");
 
         // remove description object from description repository
-        lcboFileRepository.remove(feedId);
+        File file = lcboFileRepository.remove(feedId);
 
         // Archive the file and delete the description file
-        LOGGER.debug("Remove LCBO Data Feed with feed Id {}", feedId);
+        if (file != null) {
+            LOGGER.debug("Remove LCBO Feed with feed Id {}, {}", feedId, file.getPath());
+        } else {
+            LOGGER.debug("Remove LCBO Feed with feed Id {}", feedId);
+        }
+
+        //If there are no more files to process, archive the zip file
+        if (lcboFileRepository.size() == 0) {
+            File currentZipFile = new File(environment.getRequiredProperty(Constants.PROP_LCBO_FEED_DOWNLOAD_DIR)
+                                            + File.separator + currentZipFileName + ".zip");
+            File newZipFile = new File(environment.getRequiredProperty(Constants.PROP_LCBO_FEED_ARCHIVE_DIR)
+                                            + File.separator + currentZipFileName + ".zip");
+
+            FileUtils.moveFile(currentZipFile, newZipFile);
+
+            if (newZipFile.exists() && !currentZipFile.exists()) {
+                LOGGER.debug("Current LCBO Data file successfully archived");
+            } else {
+                LOGGER.debug("Current LCBO Data file archive failed.");
+            }
+        }
 
         return RepeatStatus.FINISHED;
     }

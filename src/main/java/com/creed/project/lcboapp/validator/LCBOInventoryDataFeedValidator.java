@@ -40,11 +40,14 @@ public final class LCBOInventoryDataFeedValidator {
     }
 
     private static void validateUpdatedAt(final Date updatedAt) {
+        //Need check for Dates
     }
 
     private static void validateCreatedAt(final Date createdAt) {
+        //Need check for Dates
     }
 
     private static void validateUpdatedOn(final Date updatedOn) {
+        //Need check for Dates
     }
 }

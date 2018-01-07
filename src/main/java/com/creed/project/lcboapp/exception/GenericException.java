@@ -2,8 +2,6 @@ package com.creed.project.lcboapp.exception;
 
 /**
  * Generic Exception Base Class
- *
- * todo: Is this class really needed, or is it over abstraction?
  */
 public class GenericException extends RuntimeException {
 

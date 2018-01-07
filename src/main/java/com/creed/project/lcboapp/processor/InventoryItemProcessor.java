@@ -43,12 +43,9 @@ public class InventoryItemProcessor implements ItemProcessor<LCBOInventory, LCBO
         lcboInventoryEntity.setCreatedAt(inventory.getCreatedAt());
         lcboInventoryEntity.setUpdatedAt(inventory.getUpdatedAt());
 
-//        Long transId = transactionRepository.getTransactionId();
-//        Long feedId = transactionRepository.getTransactionFeedId();
-//        String lcboDataFileName = transactionRepository.getTransactionFeedFileName();
         dataRepository.addEntity(lcboInventoryEntity);
 
-        LOGGER.debug("{}", lcboInventoryEntity);
+        LOGGER.debug("{} {}", lcboInventoryEntity.getStoreID(), lcboInventoryEntity.getProductID());
 
         return inventory;
     }

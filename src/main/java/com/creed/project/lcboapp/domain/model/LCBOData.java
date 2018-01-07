@@ -14,8 +14,6 @@ public class LCBOData {
     private Set<LCBOInventory> inventoryObject = Collections.synchronizedSet(new HashSet<>());
     private Set<LCBOProduct> productObject = Collections.synchronizedSet(new HashSet<>());
     private Set<LCBOStore> storeObject = Collections.synchronizedSet(new HashSet<>());
-//    private Model model = new Model();
-
 
     /**
      * Default Constructor

@@ -70,20 +70,20 @@ public class BatchJobConfiguration {
                                 .from(feedFileRetrieving).on(Constants.STEP_EXIT_STATUS_COMPLETED)
                                 .end()
 
-                                .from(feedFileRetrieving).on(LCBOFileTypeModel.INVENTORY.getName())
-                                .to(feedInventoryFileTransforming)
+                                .from(feedFileRetrieving).on(LCBOFileTypeModel.STORE.getName())
+                                .to(feedStoreFileTransforming)
                                 .next(feedFileLoading)
 
                                 .from(feedFileRetrieving).on(LCBOFileTypeModel.PRODUCT.getName())
                                 .to(feedProductFileTransforming)
                                 .next(feedFileLoading)
 
-                                .from(feedFileRetrieving).on(LCBOFileTypeModel.STORE.getName())
-                                .to(feedStoreFileTransforming)
+                                .from(feedFileRetrieving).on(LCBOFileTypeModel.INVENTORY.getName())
+                                .to(feedInventoryFileTransforming)
                                 .next(feedFileLoading)
 
                                 .next(feedFileArchiving)
-//                                .next(feedFileDownloading)
+                                .next(feedFileRetrieving)
                                 .build()
 
                                 .build();

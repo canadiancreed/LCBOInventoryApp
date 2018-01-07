@@ -1,10 +1,10 @@
 package com.creed.project.lcboapp.repository;
 
 import com.creed.project.lcboapp.common.Constants;
-import com.creed.project.lcboapp.common.FeedUtils;
 import com.creed.project.lcboapp.domain.model.LCBOFileTypeModel;
 import com.creed.project.lcboapp.persistence.repository.LCBOAppFeedJpaRepository;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -25,6 +25,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Map;
+import java.util.Objects;
+import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -76,35 +78,11 @@ public class LCBOFileRepository {
     }
 
     /**
-     * List files in the feed input directory and store in feed repository
-     */
-
-    public void loadZipFileRepository() {
-        // Clear repository before loading file list:
-        currentLCBOFilesRepository.clear();
-
-        final String currentLCBOZipFiles = environment.getProperty(Constants.PROP_LCBO_FEED_DOWNLOAD_DIR);
-
-        LOGGER.debug("LCBO Data Zip Files Input Path: {}", currentLCBOZipFiles);
-
-        filterFeedFiles(FeedUtils.getFeedFiles(currentLCBOZipFiles));
-    }
-
-    public void loadLCBODataFileRepository() {
-        // Clear repository before loading file list:
-        currentLCBOFilesRepository.clear();
-
-        final String currentLCBODataFiles = environment.getProperty(Constants.PROP_LCBO_FEED_WORKING_DIR);
-
-        LOGGER.debug("LCBO Data Files Input Path: {}", currentLCBODataFiles);
-
-        filterFeedFiles(FeedUtils.getFeedFiles(currentLCBODataFiles));
-    }
-
-    /**
      * Filters and stores all files for current day data into currentLCBOFileRepository map
      *
      * @param fileMap
+     *
+     * todo is this still needed?
      */
 
     private void filterFeedFiles(final Map<String, File> fileMap) {
@@ -160,15 +138,7 @@ public class LCBOFileRepository {
             return null;
         }
 
-        String feedId = null;
-
-        for (Map.Entry<String, File> entry : currentLCBOFilesRepository.entrySet()) {
-            feedId = entry.getKey();
-            break;
-        }
-
-        // return feed if exist, null otherwise
-        return feedId;
+        return currentLCBOFilesRepository.entrySet().iterator().next().getKey();
     }
 
     /**
@@ -224,22 +194,43 @@ public class LCBOFileRepository {
      * - Craft the URL to download the latest zip file
      * - Download the zip file and save it to the download directory
      */
-    public void downloadLatestLCBODataFile() throws FileAlreadyExistsException {
-//        if (!doesFileExist()) {
+    public String downloadLatestLCBODataFile() throws FileAlreadyExistsException {
+
+        String newZipFileName;
+
+        //If there's anything in jobContext, add +1. If there's nothing, check the archive directory and get the latest
+        // file. If there is, get the most recent file. If there's none, populate with 1
+
+        newZipFileName = listFilesForFolder(environment.getRequiredProperty(Constants.PROP_LCBO_FEED_ARCHIVE_DIR));
+
+        if (!newZipFileName.isEmpty()) {
+            //get current value and increment it by one
+            Integer zipFileValue = Integer.parseInt(newZipFileName);
+
+            zipFileValue++;
+
+            newZipFileName = zipFileValue.toString();
+        } else {
+            newZipFileName = "1";
+        }
+
+        if (!doesFileExist(newZipFileName)) {
             CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 
-            HttpGet getFile = new HttpGet("http://static.lcboapi.com/datasets/1.zip");
+            HttpGet getFile = new HttpGet("http://static.lcboapi.com/datasets/" + newZipFileName + ".zip");
 
             try (CloseableHttpResponse response = httpClient.execute(getFile)) {
-                writeFile(response);
+                writeFile(response, newZipFileName);
             } catch (ClientProtocolException cpe) {
                 LOGGER.error("A client protocal issue occured.", cpe.getMessage());
             } catch (IOException ioe) {
                 LOGGER.error("Unable to access the file.", ioe.getMessage());
             }
-//        } else {
-//            throw new FileAlreadyExistsException("File already exists. File has not been moved to archive dir. Aborting.");
-//        }
+        } else {
+            throw new FileAlreadyExistsException("File already exists. File has not been moved to archive dir. Aborting.");
+        }
+
+        return newZipFileName;
     }
 
     /**
@@ -249,11 +240,11 @@ public class LCBOFileRepository {
      * - Unpacks the downloaded file
      * - Export all unpacked files to the working directory
      */
-    public void unpackLatestLCBODataFile() throws FileNotFoundException {
-        if (doesFileExist()) {
-            unpackFile();
+    public void unpackLatestLCBODataFile(final String zipFileName) throws FileNotFoundException {
+        if (doesFileExist(zipFileName)) {
+            unpackFile(zipFileName);
         } else {
-            throw new FileNotFoundException("File to unpack does not exists. Attempting to redownload file.");
+            throw new FileNotFoundException("File to unpack does not exists. Aborting.");
         }
     }
 
@@ -262,26 +253,65 @@ public class LCBOFileRepository {
     /**
      * Does the file specified exist?
      *
-     * todo - file is hardcoded. Fix this
      * @return
      */
-    private boolean doesFileExist() {
+    private boolean doesFileExist(final String fileName) {
         File file = new File(environment.getRequiredProperty(Constants.PROP_LCBO_FEED_DOWNLOAD_DIR) +
-                File.separator + "1.zip");
+                File.separator + fileName + ".zip");
 
         return file.exists();
     }
 
-    private void writeFile(CloseableHttpResponse response) {
+    /**
+     * Unpacks the current zip file
+     */
+    private void unpackFile(final String zipFileName) {
+        currentLCBOFilesRepository.clear();
+
+        try (ZipInputStream zis = new ZipInputStream(new FileInputStream(environment.getRequiredProperty(
+                Constants.PROP_LCBO_FEED_DOWNLOAD_DIR) + File.separator + zipFileName + ".zip"))) {
+
+            ZipEntry zipEntry = zis.getNextEntry();
+
+            while(zipEntry != null){
+                final String fileName = zipEntry.getName();
+                final String filePath = environment.getRequiredProperty(Constants.PROP_LCBO_FEED_WORKING_DIR) + fileName;
+
+                File newFile = new File(filePath);
+
+                try (FileOutputStream fos = new FileOutputStream(newFile)) {
+                    for (int len; (len = zis.read(buffer)) > 0; ) {
+                        fos.write(buffer, 0, len);
+                    }
+                }
+
+                currentLCBOFilesRepository.put(fileName, newFile);
+
+                Path path = Paths.get(filePath);
+                BasicFileAttributes attr = Files.readAttributes(path, BasicFileAttributes.class);
+                long creationTime = attr.creationTime().toMillis();
+
+                LOGGER.debug("LCBO Data File Feed: {}, {}", fileName, creationTime);
+
+                zipEntry = zis.getNextEntry();
+            }
+
+            zis.closeEntry();
+        } catch (FileNotFoundException fnfe) {
+            LOGGER.error("Unable to find file to read from.", fnfe.getMessage());
+        } catch (IOException ioe) {
+            LOGGER.error("Unable to write to the file.", ioe.getMessage());
+        }
+    }
+
+    private void writeFile(CloseableHttpResponse response, String zipFileName) {
         try (OutputStream output = new FileOutputStream(environment.getRequiredProperty(
-                Constants.PROP_LCBO_FEED_DOWNLOAD_DIR) + File.separator + "1.zip")) {
+                Constants.PROP_LCBO_FEED_DOWNLOAD_DIR) + File.separator + zipFileName + ".zip")) {
             final InputStream input = response.getEntity().getContent();
 
             for (int length; (length = input.read(buffer)) > 0; ) {
                 output.write(buffer, 0, length);
             }
-
-            output.close();
         } catch (FileNotFoundException fnfe) {
             LOGGER.error("Unable to find file to write too.", fnfe.getMessage());
         } catch (IOException ioe) {
@@ -289,38 +319,24 @@ public class LCBOFileRepository {
         }
     }
 
-    /**
-     * Unpacks the current zip file
-     *
-     * todo - Filename hardcoded. Fix
-     */
-    private void unpackFile() {
-        try (ZipInputStream zis = new ZipInputStream(new FileInputStream(environment.getRequiredProperty(
-                Constants.PROP_LCBO_FEED_DOWNLOAD_DIR) + File.separator + "1.zip"))) {
+    private String listFilesForFolder(final String folderName) {
+        TreeSet<String> fileNameList = new TreeSet<>();
+        String latestFileName;
 
-            ZipEntry zipEntry = zis.getNextEntry();
+        File folder = new File(folderName);
 
-            while(zipEntry != null){
-                String fileName = zipEntry.getName();
-                File newFile = new File(environment.getRequiredProperty(Constants.PROP_LCBO_FEED_WORKING_DIR)
-                                            + fileName);
-                FileOutputStream fos = new FileOutputStream(newFile);
-
-                for (int len; (len = zis.read(buffer)) > 0; ) {
-                    fos.write(buffer, 0, len);
-                }
-
-                fos.close();
-
-                zipEntry = zis.getNextEntry();
+        for (final File fileEntry : Objects.requireNonNull(folder.listFiles())) {
+            if (!fileEntry.isDirectory()) {
+                fileNameList.add(FilenameUtils.removeExtension(fileEntry.getName()));
             }
-
-            zis.closeEntry();
-            zis.close();
-        } catch (FileNotFoundException fnfe) {
-            LOGGER.error("Unable to find file to read from.", fnfe.getMessage());
-        } catch (IOException ioe) {
-            LOGGER.error("Unable to write to the file.", ioe.getMessage());
         }
+
+        if (fileNameList.isEmpty()) {
+            latestFileName = fileNameList.last();
+        } else {
+            latestFileName = "";
+        }
+
+        return latestFileName;
     }
 }

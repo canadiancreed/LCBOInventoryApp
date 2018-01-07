@@ -1,7 +1,6 @@
 package com.creed.project.lcboapp.processor;
 
 import com.creed.project.lcboapp.domain.LCBOStore;
-import com.creed.project.lcboapp.persistence.model.LCBOInventoryEntity;
 import com.creed.project.lcboapp.persistence.model.LCBOStoreEntity;
 import com.creed.project.lcboapp.repository.DataRepository;
 import com.creed.project.lcboapp.repository.TransactionRepository;
@@ -46,12 +45,9 @@ public class StoreItemProcessor implements ItemProcessor<LCBOStore, LCBOStore> {
         lcboStoreEntity.setLongitude(store.getLongitude());
         lcboStoreEntity.setUpdatedAt(store.getUpdatedAt());
 
-//        Long transId = transactionRepository.getTransactionId();
-//        Long feedId = transactionRepository.getTransactionFeedId();
-//        String lcboDataFileName = transactionRepository.getTransactionFeedFileName();
         dataRepository.addEntity(lcboStoreEntity);
 
-        LOGGER.debug("{}", lcboStoreEntity);
+        LOGGER.debug("{}", lcboStoreEntity.getId());
 
         return store;
     }

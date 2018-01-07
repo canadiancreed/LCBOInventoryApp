@@ -45,14 +45,14 @@ public class FeedDataTransformingListener implements StepExecutionListener {
 
     @Override
     public void beforeStep(final StepExecution stepExecution) {
-        LOGGER.debug(">>>>>>>>>> Start LCBO Feed Data Inventory Processing Step");
+        LOGGER.debug(">>>>>>>>>> Start LCBO Feed Data Transformation Processing Step");
 
         timestamp = System.currentTimeMillis();
 
         // Get data from job execution context
         JobExecution jobExecution = stepExecution.getJobExecution();
         ExecutionContext jobContext = jobExecution.getExecutionContext();
-        String feedId = jobContext.getString("feedId");
+        String feedId = jobContext.getString("lcboFileID");
 
         // Validate feedId
         if (feedId == null || feedId.isEmpty()) {
@@ -84,7 +84,7 @@ public class FeedDataTransformingListener implements StepExecutionListener {
         ExecutionContext jobContext = jobExecution.getExecutionContext();
         List<Throwable> exceptions = stepExecution.getFailureExceptions();
 
-        String feedId = (String) jobContext.get("feedId");
+        String feedId = (String) jobContext.get("lcboFileID");
         LCBOFileTypeModel lcboFileType = (LCBOFileTypeModel) jobContext.get("lcboFileType");
         Long transactionId = transactionRepository.getTransactionId();
 

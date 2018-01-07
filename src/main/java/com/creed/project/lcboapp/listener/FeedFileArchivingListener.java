@@ -12,6 +12,13 @@ public class FeedFileArchivingListener implements StepExecutionListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FeedFileArchivingListener.class);
 
+    /**
+     * Default Constructor
+     */
+    public FeedFileArchivingListener() {
+        super();
+    }
+
     @Override
     public void beforeStep(final StepExecution stepExecution) {
         LOGGER.debug(">>>>>>>>>> Start LCBO Feed Data Archiving Step");

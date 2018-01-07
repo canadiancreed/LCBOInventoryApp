@@ -5,5 +5,5 @@ public enum ETLStatus {
     PROCESSING,
     COMPLETED,
     FAILED,
-    UNKNOWN;
+    UNKNOWN
 }

@@ -52,8 +52,6 @@ public class JpaRepositoryConfiguration {
      * Create primary datasource bean
      *
      * @return primary datasource
-     *
-     * todo: For some reason it's not loading the settings from the importer-mysql.properties file. Why?
      */
     @Bean
     @ConfigurationProperties(prefix = "importer.jdbc")

@@ -1,8 +1,7 @@
 package com.creed.project.lcboapp.validator;
 
-import com.creed.project.lcboapp.domain.LCBOInventory;
 import com.creed.project.lcboapp.domain.LCBOProduct;
-import com.creed.project.lcboapp.exception.InvalidInventoryFieldValue;
+import com.creed.project.lcboapp.exception.InvalidProductFieldValue;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
@@ -34,79 +33,92 @@ public final class LCBOProductDataFeedValidator {
     }
 
     private static void validateID(final Long id){
-
+        if (StringUtils.isNumeric(id.toString())) { return; }
+        throw new InvalidProductFieldValue("id", id);
     }
 
-    private static void validateName(final String id){
-
+    private static void validateName(final String name){
+        if (StringUtils.isNotBlank(name)) { return; }
+        throw new InvalidProductFieldValue("name", name);
     }
 
-    private static void validatePriceInCents(final Double id){
-
+    private static void validatePriceInCents(final Double priceInCents){
+        if (StringUtils.isNotBlank(priceInCents.toString())) { return; }
+        throw new InvalidProductFieldValue("priceInCents", priceInCents);
     }
 
-    private static void validateRegularPriceInCents(final Double id){
-
+    private static void validateRegularPriceInCents(final Double regularPriceInCents){
+        if (StringUtils.isNotBlank(regularPriceInCents.toString())) { return; }
+        throw new InvalidProductFieldValue("regularPriceInCents", regularPriceInCents);
     }
 
-    private static void validatePrimaryCategory(final String id){
+    private static void validatePrimaryCategory(final String primaryCategory){
+        if (StringUtils.isBlank(primaryCategory)) { return; }
 
+        if (StringUtils.isAlphanumericSpace(primaryCategory)) { return; }
+        throw new InvalidProductFieldValue("primaryCategory", primaryCategory);
     }
 
-    private static void validateOrigin(final String id){
-
+    private static void validateSecondaryCategory(final String secondaryCategory){
+//        if (StringUtils.isBlank(secondaryCategory)) { return; }
+//
+//        if (StringUtils.isAlphanumericSpace(secondaryCategory)) { return; }
+//        throw new InvalidProductFieldValue("secondaryCategory", secondaryCategory);
     }
 
-    private static void validateProducerName(final String id){
-
+    private static void validateOrigin(final String origin){
+//        if (StringUtils.isBlank(origin)) { return; }
+//
+//        if (StringUtils.isAlphanumericSpace(origin)) { return; }
+//        throw new InvalidProductFieldValue("origin", origin);
     }
 
-    private static void validateReleasedOn(final Date id){
-
+    private static void validateProducerName(final String producerName){
+//        if (StringUtils.isBlank(producerName)) { return; }
+//
+//        if (StringUtils.isAlphanumericSpace(producerName)) { return; }
+//        throw new InvalidProductFieldValue("producerName", producerName);
     }
 
-    private static void validateSecondaryCategory(final String id){
+    private static void validateReleasedOn(final String releasedOn){
+        if (StringUtils.isBlank(releasedOn)) { return; }
 
+        if (StringUtils.isNotBlank(releasedOn)) { return; }
+        throw new InvalidProductFieldValue("releasedOn", releasedOn);
     }
 
     private static void validateUpdatedAt(final Date updatedAt){
+        if (StringUtils.isNotBlank(updatedAt.toString())) { return; }
+        throw new InvalidProductFieldValue("updatedAt", updatedAt);
     }
 
     //Optional
 
     private static void validateImageUrl(final String imageUrl){
+        if (StringUtils.isBlank(imageUrl)) { return; }
+
+        if (StringUtils.isAlphanumericSpace(imageUrl)) { return; }
+        throw new InvalidProductFieldValue("imageUrl", imageUrl);
     }
 
     private static void validateVarietal(final String varietal){
+        if (StringUtils.isBlank(varietal)) { return; }
+
+        if (StringUtils.isAlphanumericSpace(varietal)) { return; }
+        throw new InvalidProductFieldValue("varietal", varietal);
     }
 
     private static void validateStyle(final String style){
+        if (StringUtils.isBlank(style)) { return; }
+
+        if (StringUtils.isAlphanumericSpace(style)) { return; }
+        throw new InvalidProductFieldValue("style", style);
     }
 
     private static void validateTertiaryCategory(final String tertiaryCategory){
-    }
+        if (StringUtils.isBlank(tertiaryCategory)) { return; }
 
-
-
-
-    private static void validateProductID ( final Integer productID){
-        if (StringUtils.isNumeric(productID.toString())) {
-            return;
-        }
-        throw new InvalidInventoryFieldValue("productID", productID);
-    }
-
-    private static void validateStoreID ( final Integer storeID){
-        if (StringUtils.isNumeric(storeID.toString())) {
-            return;
-        }
-        throw new InvalidInventoryFieldValue("storeID", storeID);
-    }
-
-    private static void validateQuantity ( final Integer quantity){
-        if (StringUtils.isNumeric(quantity.toString())) {
-            return;
-        }
-        throw new InvalidInventoryFieldValue("quantity", quantity);
+        if (StringUtils.isAlphanumericSpace(tertiaryCategory)) { return; }
+        throw new InvalidProductFieldValue("tertiaryCategory", tertiaryCategory);
     }
 }

@@ -47,26 +47,27 @@ public class FeedFileRetrievingListener implements StepExecutionListener {
         ExecutionContext jobContext = jobExecution.getExecutionContext();
         List<Throwable> exceptions = stepExecution.getFailureExceptions();
 
-        String feedId = (String) jobContext.get("feedId");
+        String lcboFileID = (String) jobContext.get("lcboFileID");
         LCBOFileTypeModel lcboFileType = (LCBOFileTypeModel) jobContext.get("lcboFileType");
         Long transactionId = transactionRepository.getTransactionId();
 
         ExitStatus exitStatus;
+
         if (!exceptions.isEmpty()) {
-            transactionRepository.failTransaction(feedId);
+            transactionRepository.failTransaction(lcboFileID);
             exitStatus = new ExitStatus(Constants.STEP_EXIT_STATUS_FAILED);
         } else {
-            if (feedId == null || feedId.isEmpty()) {
+            if (lcboFileID == null || lcboFileID.isEmpty()) {
                 transactionRepository.endTransaction();
                 exitStatus = new ExitStatus(Constants.STEP_EXIT_STATUS_COMPLETED);
             } else {
-                transactionRepository.beginFeedTransaction(feedId);
+                transactionRepository.beginFeedTransaction(lcboFileID);
                 exitStatus = new ExitStatus(lcboFileType.getName());
             }
         }
 
         LOGGER.debug("LCBO File Type Feed Id: {}, LCBO File Type: {}, Trans Id: {}, Elapsed: {}",
-                feedId, lcboFileType, transactionId, System.currentTimeMillis() - timestamp);
+                lcboFileID, lcboFileType, transactionId, System.currentTimeMillis() - timestamp);
         LOGGER.debug(">>>>>>>>>> End LCBO Feed File Retrieving Step.");
 
         return exitStatus;

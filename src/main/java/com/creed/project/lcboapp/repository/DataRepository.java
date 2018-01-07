@@ -1,8 +1,6 @@
 package com.creed.project.lcboapp.repository;
 
 import com.creed.project.lcboapp.common.Constants;
-import com.creed.project.lcboapp.domain.LCBOProduct;
-import com.creed.project.lcboapp.domain.LCBOStore;
 import com.creed.project.lcboapp.domain.model.LCBOFileTypeModel;
 import com.creed.project.lcboapp.persistence.model.LCBOInventoryEntity;
 import com.creed.project.lcboapp.persistence.model.LCBOProductEntity;
@@ -10,7 +8,6 @@ import com.creed.project.lcboapp.persistence.model.LCBOStoreEntity;
 import com.creed.project.lcboapp.persistence.repository.LCBOInventoryJpaRepository;
 import com.creed.project.lcboapp.persistence.repository.LCBOProductJpaRepository;
 import com.creed.project.lcboapp.persistence.repository.LCBOStoreJpaRepository;
-import com.creed.project.lcboapp.persistence.repository.ModelLCBODataJpaRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.Calendar;
+import java.util.Map;
+import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component

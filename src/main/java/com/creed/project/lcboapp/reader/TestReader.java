@@ -12,7 +12,7 @@ public class TestReader implements ItemReader {
     public TestReader() { super(); }
 
     @Override
-    public String read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
+    public String read() throws UnexpectedInputException, ParseException, NonTransientResourceException {
         return "Hello World!";
     }
 }

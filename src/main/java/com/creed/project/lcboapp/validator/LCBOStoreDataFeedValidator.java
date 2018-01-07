@@ -1,8 +1,7 @@
 package com.creed.project.lcboapp.validator;
 
-import com.creed.project.lcboapp.domain.LCBOInventory;
 import com.creed.project.lcboapp.domain.LCBOStore;
-import com.creed.project.lcboapp.exception.InvalidInventoryFieldValue;
+import com.creed.project.lcboapp.exception.InvalidStoreFieldValue;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
@@ -29,11 +28,13 @@ public final class LCBOStoreDataFeedValidator {
     }
 
     private static void validateId(final Long id) {
+        if (StringUtils.isNumeric(id.toString())) { return; }
+        throw new InvalidStoreFieldValue("id", id);
     }
 
     private static void validateAddressLineOne(final String addressLineOne) {
         if (StringUtils.isNotBlank(addressLineOne)) { return; }
-        throw new InvalidInventoryFieldValue("addressLineOne", addressLineOne);
+        throw new InvalidStoreFieldValue("addressLineOne", addressLineOne);
     }
 
     //Can be blank
@@ -43,12 +44,12 @@ public final class LCBOStoreDataFeedValidator {
 
     private static void validateCity(final String city) {
         if (StringUtils.isNotBlank(city)) { return; }
-        throw new InvalidInventoryFieldValue("city", city);
+        throw new InvalidStoreFieldValue("city", city);
     }
 
     private static void validatePostalCode(final String postalCode) {
         if (postalCode.matches("^(?!.*[DFIOQU])[A-VXY][0-9][A-Z] ?[0-9][A-Z][0-9]$")) { return; }
-        throw new InvalidInventoryFieldValue("postalCode", postalCode);
+        throw new InvalidStoreFieldValue("postalCode", postalCode);
     }
 
     private static void validateLatitude(final String latitude) {
@@ -56,7 +57,7 @@ public final class LCBOStoreDataFeedValidator {
             return;
         }
 
-        throw new InvalidInventoryFieldValue("latitude", latitude);
+        throw new InvalidStoreFieldValue("latitude", latitude);
     }
 
     private static void validateLongitude(final String longitude) {
@@ -64,7 +65,7 @@ public final class LCBOStoreDataFeedValidator {
             return;
         }
 
-        throw new InvalidInventoryFieldValue("longitude", longitude);
+        throw new InvalidStoreFieldValue("longitude", longitude);
     }
 
     private static void validateUpdatedAt(final Date updatedAt) {

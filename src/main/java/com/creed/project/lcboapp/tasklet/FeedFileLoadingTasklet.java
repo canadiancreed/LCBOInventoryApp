@@ -56,5 +56,4 @@ public class FeedFileLoadingTasklet implements Tasklet, InitializingBean {
 
         return RepeatStatus.FINISHED;
     }
-
 }

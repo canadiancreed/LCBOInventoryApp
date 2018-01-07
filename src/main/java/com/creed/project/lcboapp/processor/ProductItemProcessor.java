@@ -2,11 +2,9 @@ package com.creed.project.lcboapp.processor;
 
 import com.creed.project.lcboapp.domain.LCBOProduct;
 import com.creed.project.lcboapp.persistence.model.LCBOProductEntity;
-import com.creed.project.lcboapp.persistence.model.LCBOStoreEntity;
 import com.creed.project.lcboapp.repository.DataRepository;
 import com.creed.project.lcboapp.repository.TransactionRepository;
 import com.creed.project.lcboapp.validator.LCBOProductDataFeedValidator;
-import com.creed.project.lcboapp.validator.LCBOStoreDataFeedValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemProcessor;
@@ -54,7 +52,7 @@ public class ProductItemProcessor implements ItemProcessor<LCBOProduct, LCBOProd
 
         dataRepository.addEntity(lcboProductEntity);
 
-        LOGGER.debug("{}", lcboProductEntity);
+        LOGGER.debug("{}", lcboProductEntity.getId());
 
         return product;
     }

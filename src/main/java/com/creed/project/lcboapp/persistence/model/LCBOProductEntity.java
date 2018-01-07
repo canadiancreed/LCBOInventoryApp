@@ -32,22 +32,22 @@ public class LCBOProductEntity {
     @Column(name = "PRODUCER_NAME", nullable = false)
     private String producerName;
 
-    @Column(name = "RELEASE_ON", nullable = false)
-    private Date releasedOn;
+    @Column(name = "RELEASED_ON", nullable = false)
+    private String releasedOn;
 
     @Column(name = "UPDATED_AT", nullable = false)
     private Date updatedAt;
 
-    @Column(name = "IMAGE_URL", nullable = false)
+    @Column(name = "IMAGE_URL")
     private String imageUrl;
 
-    @Column(name = "Varietal", nullable = false)
+    @Column(name = "Varietal")
     private String varietal;
 
-    @Column(name = "STYLE", nullable = false)
+    @Column(name = "STYLE")
     private String style;
 
-    @Column(name = "TERTIARY_CATEGORY", nullable = false)
+    @Column(name = "TERTIARY_CATEGORY")
     private String tertiaryCategory;
 
     /**
@@ -73,7 +73,7 @@ public class LCBOProductEntity {
 
     public String getProducerName() { return producerName; }
 
-    public Date getReleasedOn() { return releasedOn; }
+    public String getReleasedOn() { return releasedOn; }
 
     public Date getUpdatedAt() { return updatedAt; }
 
@@ -101,7 +101,7 @@ public class LCBOProductEntity {
 
     public void setProducerName(final String producerName) { this.producerName = producerName; }
 
-    public void setReleasedOn(final Date releasedOn) { this.releasedOn = releasedOn; }
+    public void setReleasedOn(final String releasedOn) { this.releasedOn = releasedOn; }
 
     public void setUpdatedAt(final Date updatedAt) { this.updatedAt = updatedAt; }
 

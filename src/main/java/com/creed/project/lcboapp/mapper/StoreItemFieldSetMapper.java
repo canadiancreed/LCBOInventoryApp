@@ -30,7 +30,7 @@ public class StoreItemFieldSetMapper implements FieldSetMapper<LCBOStore> {
         entity.setPostalCode(fieldSet.readString(IDX_POSTAL_CODE));
         entity.setLatitude(fieldSet.readString(IDX_LATITUDE));
         entity.setLongitude(fieldSet.readString(IDX_LONGITUDE));
-        entity.setUpdatedAt(fieldSet.readDate(IDX_UPDATED_AT));
+        entity.setUpdatedAt(fieldSet.readDate(IDX_UPDATED_AT, "yyyy-MM-dd"));
 
         return entity;
     }

@@ -4,6 +4,7 @@ import com.creed.project.lcboapp.repository.LCBOFileRepository;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
+import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,14 @@ public class FeedFileDownloadingTasklet implements Tasklet, InitializingBean {
     public RepeatStatus execute(final StepContribution stepContribution,
                                 final ChunkContext chunkContext) throws Exception {
 
-        lcboFileRepository.downloadLatestLCBODataFile();
+        ExecutionContext jobContext = chunkContext.getStepContext()
+                .getStepExecution()
+                .getJobExecution()
+                .getExecutionContext();
+
+        String currentZipFileName = lcboFileRepository.downloadLatestLCBODataFile();
+
+        jobContext.put("zipFileName", currentZipFileName);
 
         return RepeatStatus.FINISHED;
     }

@@ -13,8 +13,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -82,24 +83,6 @@ public final class FeedUtils {
     }
 
     /**
-     * @param status the ETL status
-     * @return the flag base on ETL Status
-     */
-    public static String getDPTReadyFlag(ETLStatus status) {
-        Flag flag;
-
-        if (ETLStatus.COMPLETED == status) {
-            flag = Flag.YES;
-        } else if (ETLStatus.FAILED == status) {
-            flag = Flag.ERROR;
-        } else {
-            flag = Flag.PROCESSING;
-        }
-
-        return flag.getValue();
-    }
-
-    /**
      * move feed to archive location
      *
      * @param destinationDir the path to store file
@@ -144,7 +127,7 @@ public final class FeedUtils {
      * @param source     the source file to be archived
      * @return archive file if archive a file successfully, null otherwise
      */
-    public static File archive(String archiveDir, File source) throws IOException {
+    private static File archive(String archiveDir, File source) throws IOException {
         // Validate the file
         if (source == null || !source.exists() || !source.canRead() || source.isDirectory()) {
             return null;
@@ -167,7 +150,7 @@ public final class FeedUtils {
      * @param extension  the known file extension
      * @return archive file if archive a file successfully, null otherwise
      */
-    public static File archive(String archiveDir, File source, String extension) throws IOException {
+    private static File archive(String archiveDir, File source, String extension) throws IOException {
         // Validate the file
         if (source == null || !source.exists() || !source.canRead() || source.isDirectory()) {
             return null;
@@ -295,7 +278,7 @@ public final class FeedUtils {
 
             // Close input/output file streams
             archiveStream.closeEntry();
-            archiveStream.close();
+
             IOUtils.closeQuietly(inputStream);
             IOUtils.closeQuietly(outputStream);
             FileUtils.moveFile(source, zipFile);

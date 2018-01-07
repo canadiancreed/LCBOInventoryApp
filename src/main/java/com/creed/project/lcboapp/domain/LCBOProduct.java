@@ -21,7 +21,7 @@ public class LCBOProduct {
 	private String secondaryCategory;
 	private String origin;
 	private String producerName;
-	private Date releasedOn;
+	private String releasedOn; //Changed to String since Date can't handle blank values
 	private Date updatedAt;
 	private String imageUrl;
 	private String varietal;
@@ -65,7 +65,7 @@ public class LCBOProduct {
 		return producerName;
 	}
 
-	public Date getReleasedOn() {
+	public String getReleasedOn() {
 		return releasedOn;
 	}
 
@@ -89,57 +89,57 @@ public class LCBOProduct {
 		return tertiaryCategory;
 	}
 
-	public void setId(Long id) {
+	public void setId(final Long id) {
 		this.id = id;
 	}
 
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
 	}
 
-	public void setPriceInCents(Double priceInCents) {
+	public void setPriceInCents(final Double priceInCents) {
 		this.priceInCents = priceInCents;
 	}
 
-	public void setRegularPriceInCents(Double regularPriceInCents) {
+	public void setRegularPriceInCents(final Double regularPriceInCents) {
 		this.regularPriceInCents = regularPriceInCents;
 	}
 
-	public void setPrimaryCategory(String primaryCategory) {
+	public void setPrimaryCategory(final String primaryCategory) {
 		this.primaryCategory = primaryCategory;
 	}
 
-	public void setSecondaryCategory(String secondaryCategory) {
+	public void setSecondaryCategory(final String secondaryCategory) {
 		this.secondaryCategory = secondaryCategory;
 	}
 
-	public void setOrigin(String origin) {
+	public void setOrigin(final String origin) {
 		this.origin = origin;
 	}
 
-	public void setProducerName(String producerName) {
+	public void setProducerName(final String producerName) {
 		this.producerName = producerName;
 	}
 
-	public void setReleasedOn(Date releasedOn) { this.releasedOn = releasedOn; }
+	public void setReleasedOn(final String releasedOn) { this.releasedOn = releasedOn; }
 
-	public void setUpdatedAt(Date updatedAt) {
+	public void setUpdatedAt(final Date updatedAt) {
 		this.updatedAt = updatedAt;
 	}
 
-	public void setImageUrl(String imageUrl) {
+	public void setImageUrl(final String imageUrl) {
 		this.imageUrl = imageUrl;
 	}
 
-	public void setVarietal(String varietal) {
+	public void setVarietal(final String varietal) {
 		this.varietal = varietal;
 	}
 
-	public void setStyle(String style) {
+	public void setStyle(final String style) {
 		this.style = style;
 	}
 
-	public void setTertiaryCategory(String tertiaryCategory) {
+	public void setTertiaryCategory(final String tertiaryCategory) {
 		this.tertiaryCategory = tertiaryCategory;
 	}
 
