@@ -14,8 +14,6 @@ import org.springframework.context.annotation.Scope;
 @Scope(value = "step")
 public class StoreItemProcessor implements ItemProcessor<LCBOStore, LCBOStore> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(StoreItemProcessor.class);
-
     @Autowired
     private DataRepository dataRepository;
 
@@ -46,8 +44,6 @@ public class StoreItemProcessor implements ItemProcessor<LCBOStore, LCBOStore> {
         lcboStoreEntity.setUpdatedAt(store.getUpdatedAt());
 
         dataRepository.addEntity(lcboStoreEntity);
-
-        LOGGER.debug("{}", lcboStoreEntity.getId());
 
         return store;
     }

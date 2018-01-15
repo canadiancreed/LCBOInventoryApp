@@ -43,11 +43,11 @@ public class FeedFileUnpackingTasklet implements Tasklet, InitializingBean {
 
         lcboFileRepository.unpackLatestLCBODataFile(currentZipFileName);
 
-        if (lcboFileRepository.size() == 3) {
+//        if (lcboFileRepository.size() == 3) {
             transactionRepository.beginTransaction();
-        } else {
-            throw new InvalidNumberOfLCBODataFiles();
-        }
+//        } else {
+//            throw new InvalidNumberOfLCBODataFiles();
+//        }
 
         return RepeatStatus.FINISHED;
     }

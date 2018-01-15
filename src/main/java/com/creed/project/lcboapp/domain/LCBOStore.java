@@ -1,6 +1,6 @@
 package com.creed.project.lcboapp.domain;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class LCBOStore {
 
@@ -11,7 +11,7 @@ public class LCBOStore {
 	private String postalCode;
 	private String latitude;
 	private String longitude;
-	private Date updatedAt;
+	private LocalDateTime updatedAt;
 
 	/**
 	 * Default Constructor
@@ -44,7 +44,7 @@ public class LCBOStore {
 		return longitude;
 	}
 
-	public Date getUpdatedAt() {
+	public LocalDateTime getUpdatedAt() {
 		return updatedAt;
 	}
 
@@ -76,7 +76,7 @@ public class LCBOStore {
 		this.longitude = longitude;
 	}
 
-	public void setUpdatedAt(final Date updatedAt) {
+	public void setUpdatedAt(final LocalDateTime updatedAt) {
 		this.updatedAt = updatedAt;
 	}
 

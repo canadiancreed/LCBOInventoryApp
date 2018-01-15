@@ -9,4 +9,6 @@ import javax.transaction.Transactional;
 @Repository
 @Transactional
 public interface LCBOStoreJpaRepository extends JpaRepository<LCBOStoreEntity, Long> {
+
+//    void deleteAllByTransId(Long transId);
 }

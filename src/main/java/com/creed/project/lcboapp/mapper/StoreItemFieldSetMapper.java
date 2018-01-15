@@ -6,6 +6,8 @@ import org.springframework.batch.item.file.transform.FieldSet;
 import org.springframework.context.annotation.Scope;
 import org.springframework.validation.BindException;
 
+import java.time.LocalDateTime;
+
 @Scope(value = "step")
 public class StoreItemFieldSetMapper implements FieldSetMapper<LCBOStore> {
 
@@ -30,7 +32,7 @@ public class StoreItemFieldSetMapper implements FieldSetMapper<LCBOStore> {
         entity.setPostalCode(fieldSet.readString(IDX_POSTAL_CODE));
         entity.setLatitude(fieldSet.readString(IDX_LATITUDE));
         entity.setLongitude(fieldSet.readString(IDX_LONGITUDE));
-        entity.setUpdatedAt(fieldSet.readDate(IDX_UPDATED_AT, "yyyy-MM-dd"));
+        entity.setUpdatedAt(LocalDateTime.parse(fieldSet.readRawString(IDX_UPDATED_AT)));
 
         return entity;
     }

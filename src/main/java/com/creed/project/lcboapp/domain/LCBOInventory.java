@@ -3,8 +3,8 @@ package com.creed.project.lcboapp.domain;
 //Don't know how to have it so that I can use this without needing a primary unique ID column.
 //This table doesn't need them, but no idea how to advance without specifying one.
 
-
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class LCBOInventory {
 
@@ -12,9 +12,9 @@ public class LCBOInventory {
 	private int productID;
 	private int storeID;
 	private int quantity;
-	private Date updatedOn;
-	private Date createdAt;
-	private Date updatedAt;
+	private LocalDate updatedOn;
+	private LocalDateTime createdAt;
+	private LocalDateTime updatedAt;
 
 	/**
 	 * Default Constructor
@@ -35,41 +35,27 @@ public class LCBOInventory {
 		return quantity;
 	}
 
-	public Date getUpdatedOn() { return updatedOn; }
+	public LocalDate getUpdatedOn() { return updatedOn; }
 
-	public Date getCreatedAt() {
+	public LocalDateTime getCreatedAt() {
 		return createdAt;
 	}
 
-	public Date getUpdatedAt() {
-		return updatedAt;
-	}
+	public LocalDateTime getUpdatedAt() { return updatedAt; }
 
     public void setId(final Long id) { this.id = id; }
 
-	public void setProductID(final int productID) {
-		this.productID = productID;
-	}
+	public void setProductID(final int productID) { this.productID = productID; }
 
-	public void setStoreID(final int storeID) {
-		this.storeID = storeID;
-	}
+	public void setStoreID(final int storeID) { this.storeID = storeID; }
 
-	public void setQuantity(final int quantity) {
-		this.quantity = quantity;
-	}
+	public void setQuantity(final int quantity) { this.quantity = quantity; }
 
-	public void setUpdatedOn(final Date updatedOn) {
-		this.updatedOn = updatedOn;
-	}
+	public void setUpdatedOn(final LocalDate updatedOn) { this.updatedOn = updatedOn; }
 
-	public void setCreatedAt(final Date createdAt) {
-		this.createdAt = createdAt;
-	}
+	public void setCreatedAt(final LocalDateTime createdAt) { this.createdAt = createdAt; }
 
-	public void setUpdatedAt(final Date updatedAt) {
-		this.updatedAt = updatedAt;
-	}
+	public void setUpdatedAt(final LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 
 	@Override
 	public String toString() {

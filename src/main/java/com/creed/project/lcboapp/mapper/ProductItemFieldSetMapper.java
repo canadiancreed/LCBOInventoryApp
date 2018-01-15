@@ -5,6 +5,9 @@ import org.springframework.batch.item.file.mapping.FieldSetMapper;
 import org.springframework.batch.item.file.transform.FieldSet;
 import org.springframework.context.annotation.Scope;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Scope(value = "step")
 public class ProductItemFieldSetMapper implements FieldSetMapper<LCBOProduct> {
 
@@ -49,9 +52,9 @@ public class ProductItemFieldSetMapper implements FieldSetMapper<LCBOProduct> {
         entity.setSecondaryCategory(fieldSet.readString(IDX_SECONDARY_CATEGORY));
         entity.setOrigin(fieldSet.readString(IDX_ORIGIN));
         entity.setProducerName(fieldSet.readString(IDX_PRODUCER_NAME));
-        entity.setReleasedOn(fieldSet.readString(IDX_RELEASED_ON));
+        entity.setReleasedOn(LocalDate.parse(fieldSet.readRawString(IDX_RELEASED_ON)));
 //        entity.setReleasedOn(fieldSet.readDate(IDX_RELEASED_ON, "yyyy-MM-dd"));
-        entity.setUpdatedAt(fieldSet.readDate(IDX_UPDATED_AT, "yyyy-MM-dd"));
+        entity.setUpdatedAt(LocalDateTime.parse(fieldSet.readRawString(IDX_UPDATED_AT)));
 //        entity.setImageUrl(fieldSet.readString(IDX_IMAGE_URL));
 //        entity.setVarietal(fieldSet.readString(IDX_VARIETAL));
 //        entity.setStyle(fieldSet.readString(IDX_STYLE));

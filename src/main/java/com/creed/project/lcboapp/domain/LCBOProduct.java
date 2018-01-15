@@ -1,6 +1,7 @@
 package com.creed.project.lcboapp.domain;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * Old product files are missing the last four Columns and don't have the same column layout.
@@ -21,8 +22,8 @@ public class LCBOProduct {
 	private String secondaryCategory;
 	private String origin;
 	private String producerName;
-	private String releasedOn; //Changed to String since Date can't handle blank values
-	private Date updatedAt;
+	private LocalDate releasedOn;
+	private LocalDateTime updatedAt;
 	private String imageUrl;
 	private String varietal;
 	private String style;
@@ -65,11 +66,9 @@ public class LCBOProduct {
 		return producerName;
 	}
 
-	public String getReleasedOn() {
-		return releasedOn;
-	}
+	public LocalDate getReleasedOn() { return releasedOn; }
 
-	public Date getUpdatedAt() {
+	public LocalDateTime getUpdatedAt() {
 		return updatedAt;
 	}
 
@@ -121,9 +120,9 @@ public class LCBOProduct {
 		this.producerName = producerName;
 	}
 
-	public void setReleasedOn(final String releasedOn) { this.releasedOn = releasedOn; }
+	public void setReleasedOn(final LocalDate releasedOn) { this.releasedOn = releasedOn; }
 
-	public void setUpdatedAt(final Date updatedAt) {
+	public void setUpdatedAt(final LocalDateTime updatedAt) {
 		this.updatedAt = updatedAt;
 	}
 

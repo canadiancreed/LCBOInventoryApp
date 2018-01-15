@@ -1,7 +1,11 @@
 package com.creed.project.lcboapp.persistence.model;
 
-import javax.persistence.*;
-import java.util.Date;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "PRODUCT")
@@ -33,10 +37,10 @@ public class LCBOProductEntity {
     private String producerName;
 
     @Column(name = "RELEASED_ON", nullable = false)
-    private String releasedOn;
+    private LocalDate releasedOn;
 
     @Column(name = "UPDATED_AT", nullable = false)
-    private Date updatedAt;
+    private LocalDateTime updatedAt;
 
     @Column(name = "IMAGE_URL")
     private String imageUrl;
@@ -73,9 +77,9 @@ public class LCBOProductEntity {
 
     public String getProducerName() { return producerName; }
 
-    public String getReleasedOn() { return releasedOn; }
+    public LocalDate getReleasedOn() { return releasedOn; }
 
-    public Date getUpdatedAt() { return updatedAt; }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
 
     public String getImageUrl() { return imageUrl; }
 
@@ -101,9 +105,9 @@ public class LCBOProductEntity {
 
     public void setProducerName(final String producerName) { this.producerName = producerName; }
 
-    public void setReleasedOn(final String releasedOn) { this.releasedOn = releasedOn; }
+    public void setReleasedOn(final LocalDate releasedOn) { this.releasedOn = releasedOn; }
 
-    public void setUpdatedAt(final Date updatedAt) { this.updatedAt = updatedAt; }
+    public void setUpdatedAt(final LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 
     public void setImageUrl(final String imageUrl) { this.imageUrl = imageUrl; }
 

@@ -1,10 +1,12 @@
 package com.creed.project.lcboapp.validator;
 
+import com.creed.project.lcboapp.common.UtilClass;
 import com.creed.project.lcboapp.domain.LCBOInventory;
 import com.creed.project.lcboapp.exception.InvalidInventoryFieldValue;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public final class LCBOInventoryDataFeedValidator {
 
@@ -19,9 +21,9 @@ public final class LCBOInventoryDataFeedValidator {
         validateProductID(entity.getProductID());
         validateStoreID(entity.getStoreID());
         validateQuantity(entity.getQuantity());
+        validateUpdatedOn(entity.getUpdatedOn());
         validateUpdatedAt(entity.getUpdatedAt());
         validateCreatedAt(entity.getCreatedAt());
-        validateUpdatedOn(entity.getUpdatedOn());
     }
 
     private static void validateProductID(final Integer productID) {
@@ -39,15 +41,17 @@ public final class LCBOInventoryDataFeedValidator {
         throw new InvalidInventoryFieldValue("quantity", quantity);
     }
 
-    private static void validateUpdatedAt(final Date updatedAt) {
-        //Need check for Dates
+    //todo Date classes can't throw custom exceptions without tests breaking
+
+    private static void validateUpdatedOn(final LocalDate updatedOn) {
+        if (UtilClass.validateDate(updatedOn)) { return; }
     }
 
-    private static void validateCreatedAt(final Date createdAt) {
-        //Need check for Dates
+    private static void validateUpdatedAt(final LocalDateTime updatedAt) {
+        if (UtilClass.validateDate(updatedAt)) { return; }
     }
 
-    private static void validateUpdatedOn(final Date updatedOn) {
-        //Need check for Dates
+    private static void validateCreatedAt(final LocalDateTime createdAt) {
+        if (UtilClass.validateDate(createdAt)) { return; }
     }
 }

@@ -1,10 +1,13 @@
 package com.creed.project.lcboapp.validator;
 
+import com.creed.project.lcboapp.common.UtilClass;
 import com.creed.project.lcboapp.domain.LCBOProduct;
+import com.creed.project.lcboapp.exception.InvalidInventoryFieldValue;
 import com.creed.project.lcboapp.exception.InvalidProductFieldValue;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public final class LCBOProductDataFeedValidator {
 
@@ -24,7 +27,6 @@ public final class LCBOProductDataFeedValidator {
         validateSecondaryCategory(entity.getSecondaryCategory());
         validateOrigin(entity.getOrigin());
         validateProducerName(entity.getProducerName());
-        validateReleasedOn(entity.getReleasedOn());
         validateUpdatedAt(entity.getUpdatedAt());
         validateImageUrl(entity.getImageOrl());
         validateVarietal(entity.getVarietal());
@@ -60,36 +62,28 @@ public final class LCBOProductDataFeedValidator {
     }
 
     private static void validateSecondaryCategory(final String secondaryCategory){
-//        if (StringUtils.isBlank(secondaryCategory)) { return; }
-//
-//        if (StringUtils.isAlphanumericSpace(secondaryCategory)) { return; }
-//        throw new InvalidProductFieldValue("secondaryCategory", secondaryCategory);
+        if (StringUtils.isBlank(secondaryCategory)) { return; }
+        throw new InvalidProductFieldValue("secondaryCategory", secondaryCategory);
     }
 
     private static void validateOrigin(final String origin){
-//        if (StringUtils.isBlank(origin)) { return; }
-//
-//        if (StringUtils.isAlphanumericSpace(origin)) { return; }
-//        throw new InvalidProductFieldValue("origin", origin);
+        if (StringUtils.isBlank(origin)) { return; }
+        throw new InvalidProductFieldValue("origin", origin);
     }
 
     private static void validateProducerName(final String producerName){
-//        if (StringUtils.isBlank(producerName)) { return; }
-//
-//        if (StringUtils.isAlphanumericSpace(producerName)) { return; }
-//        throw new InvalidProductFieldValue("producerName", producerName);
+        if (StringUtils.isBlank(producerName)) { return; }
+        throw new InvalidProductFieldValue("producerName", producerName);
     }
 
-    private static void validateReleasedOn(final String releasedOn){
-        if (StringUtils.isBlank(releasedOn)) { return; }
-
-        if (StringUtils.isNotBlank(releasedOn)) { return; }
-        throw new InvalidProductFieldValue("releasedOn", releasedOn);
+    private static void validateReleasedOn(final LocalDate releasedOn){
+        if (UtilClass.validateDate(releasedOn)) { return; }
+        throw new InvalidInventoryFieldValue("releasedOn", releasedOn);
     }
 
-    private static void validateUpdatedAt(final Date updatedAt){
-        if (StringUtils.isNotBlank(updatedAt.toString())) { return; }
-        throw new InvalidProductFieldValue("updatedAt", updatedAt);
+    private static void validateUpdatedAt(final LocalDateTime updatedAt){
+        if (UtilClass.validateDate(updatedAt)) { return; }
+        throw new InvalidInventoryFieldValue("updatedAt", updatedAt);
     }
 
     //Optional

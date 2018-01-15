@@ -3,6 +3,8 @@ package com.creed.project.lcboapp.common;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
 
 /**
  * Importer Common Constants Class
@@ -89,14 +91,8 @@ public final class Constants {
     public static final String BASE_CURRENCY = "EUR";
     public static final String STAGING_PERSISTENCE_UNIT_NAME = "StagingPersistenceUnit";
     public static final String ISOLATION_READ_COMMITTED = "ISOLATION_READ_COMMITTED";
-    public static final DateTimeFormatter JSON_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    public static final DateTimeFormatter SIMPLE_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd");
-    public static final LocalDateTime FUTURE_DATE;
-
-    static {
-        LocalDate localDate = LocalDate.parse("20500101", SIMPLE_DATE_FORMATTER);
-        FUTURE_DATE = LocalDateTime.from(localDate.atStartOfDay());
-    }
+    public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    public static final DateTimeFormatter DATETIME_FORMAT = assembleDateTimeFormat();
 
     /**
      * Batch Job Status
@@ -127,6 +123,15 @@ public final class Constants {
      */
     private Constants() {
         throw new IllegalAccessError("Constants Class");
+    }
+
+    private static DateTimeFormatter assembleDateTimeFormat() {
+        return new DateTimeFormatterBuilder()
+                .appendPattern("uuuu-MM-dd HH:mm:ss")
+                .optionalStart()
+                .appendFraction(ChronoField.MICRO_OF_SECOND, 1, 6, true)
+                .optionalEnd()
+                .toFormatter();
     }
 
 }

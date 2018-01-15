@@ -77,6 +77,10 @@ public class LCBOFileRepository {
                 environment.getRequiredProperty(Constants.PROP_LCBO_STORE_FEED_LINE_TO_SKIP));
     }
 
+    public void loadFileRepository() {
+
+    }
+
     /**
      * Filters and stores all files for current day data into currentLCBOFileRepository map
      *
@@ -194,7 +198,7 @@ public class LCBOFileRepository {
      * - Craft the URL to download the latest zip file
      * - Download the zip file and save it to the download directory
      */
-    public String downloadLatestLCBODataFile() throws FileAlreadyExistsException {
+    public String downloadLatestLCBODataFile() {
 
         String newZipFileName;
 
@@ -214,7 +218,7 @@ public class LCBOFileRepository {
             newZipFileName = "1";
         }
 
-        if (!doesFileExist(newZipFileName)) {
+//        if (!doesFileExist(newZipFileName)) {
             CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 
             HttpGet getFile = new HttpGet("http://static.lcboapi.com/datasets/" + newZipFileName + ".zip");
@@ -226,9 +230,9 @@ public class LCBOFileRepository {
             } catch (IOException ioe) {
                 LOGGER.error("Unable to access the file.", ioe.getMessage());
             }
-        } else {
-            throw new FileAlreadyExistsException("File already exists. File has not been moved to archive dir. Aborting.");
-        }
+//        } else {
+//            throw new FileAlreadyExistsException("File already exists. File has not been moved to archive dir. Aborting.");
+//        }
 
         return newZipFileName;
     }
@@ -242,7 +246,17 @@ public class LCBOFileRepository {
      */
     public void unpackLatestLCBODataFile(final String zipFileName) throws FileNotFoundException {
         if (doesFileExist(zipFileName)) {
-            unpackFile(zipFileName);
+            currentLCBOFilesRepository.clear();
+            currentLCBOFilesRepository.put("inventories.csv", new File(
+                                        environment.getRequiredProperty(Constants.PROP_LCBO_FEED_WORKING_DIR) +
+                                                    "inventories.csv"));
+            currentLCBOFilesRepository.put("products.csv", new File(
+                    environment.getRequiredProperty(Constants.PROP_LCBO_FEED_WORKING_DIR) +
+                            "products.csv"));
+            currentLCBOFilesRepository.put("stores.csv", new File(
+                    environment.getRequiredProperty(Constants.PROP_LCBO_FEED_WORKING_DIR) +
+                            "stores.csv"));
+            //unpackFile(zipFileName);
         } else {
             throw new FileNotFoundException("File to unpack does not exists. Aborting.");
         }
@@ -331,7 +345,7 @@ public class LCBOFileRepository {
             }
         }
 
-        if (fileNameList.isEmpty()) {
+        if (!fileNameList.isEmpty()) {
             latestFileName = fileNameList.last();
         } else {
             latestFileName = "";

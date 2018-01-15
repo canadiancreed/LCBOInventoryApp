@@ -1,10 +1,13 @@
 package com.creed.project.lcboapp.validator;
 
+import com.creed.project.lcboapp.common.UtilClass;
 import com.creed.project.lcboapp.domain.LCBOStore;
+import com.creed.project.lcboapp.exception.InvalidInventoryFieldValue;
+import com.creed.project.lcboapp.exception.InvalidProductFieldValue;
 import com.creed.project.lcboapp.exception.InvalidStoreFieldValue;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public final class LCBOStoreDataFeedValidator {
 
@@ -39,7 +42,8 @@ public final class LCBOStoreDataFeedValidator {
 
     //Can be blank
     private static void validateAddressLineTwo(final String addressLineTwo) {
-        return;
+        if (StringUtils.isBlank(addressLineTwo)) { return; }
+        throw new InvalidProductFieldValue("addressLineTwo", addressLineTwo);
     }
 
     private static void validateCity(final String city) {
@@ -68,7 +72,8 @@ public final class LCBOStoreDataFeedValidator {
         throw new InvalidStoreFieldValue("longitude", longitude);
     }
 
-    private static void validateUpdatedAt(final Date updatedAt) {
-        if (StringUtils.isNotBlank(updatedAt.toString())) { return; }
+    private static void validateUpdatedAt(final LocalDateTime updatedAt) {
+        if (UtilClass.validateDate(updatedAt)) { return; }
+        throw new InvalidInventoryFieldValue("updatedAt", updatedAt);
     }
 }

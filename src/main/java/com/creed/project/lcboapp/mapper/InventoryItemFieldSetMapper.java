@@ -6,6 +6,9 @@ import org.springframework.batch.item.file.transform.FieldSet;
 import org.springframework.context.annotation.Scope;
 import org.springframework.validation.BindException;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Scope(value = "step")
 public class InventoryItemFieldSetMapper implements FieldSetMapper<LCBOInventory> {
 
@@ -16,8 +19,6 @@ public class InventoryItemFieldSetMapper implements FieldSetMapper<LCBOInventory
     private static final int IDX_CREATED_AT = 5;
     private static final int IDX_UPDATED_AT = 6;
 
-    private static final String DATE_FORMAT = "yyyy-MM-dd";
-
     @Override
     public LCBOInventory mapFieldSet(final FieldSet fieldSet) throws BindException {
 
@@ -26,9 +27,9 @@ public class InventoryItemFieldSetMapper implements FieldSetMapper<LCBOInventory
         entity.setProductID(fieldSet.readInt(IDX_PRODUCT_ID));
         entity.setStoreID(fieldSet.readInt(IDX_STORE_ID));
         entity.setQuantity(fieldSet.readInt(IDX_QUANTITY));
-        entity.setUpdatedOn(fieldSet.readDate(IDX_UPDATED_ON, DATE_FORMAT));
-        entity.setCreatedAt(fieldSet.readDate(IDX_CREATED_AT, DATE_FORMAT));
-        entity.setUpdatedAt(fieldSet.readDate(IDX_UPDATED_AT, DATE_FORMAT));
+        entity.setUpdatedOn(LocalDate.parse(fieldSet.readRawString(IDX_UPDATED_ON)));
+        entity.setCreatedAt(LocalDateTime.parse(fieldSet.readRawString(IDX_CREATED_AT)));
+        entity.setUpdatedAt(LocalDateTime.parse(fieldSet.readRawString(IDX_UPDATED_AT)));
 
         return entity;
     }

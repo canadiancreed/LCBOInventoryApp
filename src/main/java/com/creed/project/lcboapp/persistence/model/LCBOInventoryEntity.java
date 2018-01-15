@@ -1,7 +1,8 @@
 package com.creed.project.lcboapp.persistence.model;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "INVENTORY")
@@ -22,13 +23,13 @@ public class LCBOInventoryEntity {
     private int quantity;
 
     @Column(name = "UPDATED_ON", nullable = false)
-    private Date updatedOn;
+    private LocalDate updatedOn;
 
     @Column(name = "CREATED_AT", nullable = false)
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
     @Column(name = "UPDATED_AT", nullable = false)
-    private Date updatedAt;
+    private LocalDateTime updatedAt;
 
     /**
      * Default Constructor
@@ -45,11 +46,11 @@ public class LCBOInventoryEntity {
 
     public int getQuantity() { return quantity; }
 
-    public Date getUpdatedOn() { return updatedOn; }
+    public LocalDate getUpdatedOn() { return updatedOn; }
 
-    public Date getCreatedAt() { return createdAt; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
 
-    public Date getUpdatedAt() { return updatedAt; }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
 
     public void setId(final Long id) { this.id = id; }
 
@@ -59,11 +60,11 @@ public class LCBOInventoryEntity {
 
     public void setQuantity(final int quantity) { this.quantity = quantity; }
 
-    public void setUpdatedOn(final Date updatedOn) { this.updatedOn = updatedOn; }
+    public void setUpdatedOn(final LocalDate updatedOn) { this.updatedOn = updatedOn; }
 
-    public void setCreatedAt(final Date createdAt) { this.createdAt = createdAt; }
+    public void setCreatedAt(final LocalDateTime createdAt) { this.createdAt = createdAt; }
 
-    public void setUpdatedAt(final Date updatedAt) { this.updatedAt = updatedAt; }
+    public void setUpdatedAt(final LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 
     @Override
     public String toString() {

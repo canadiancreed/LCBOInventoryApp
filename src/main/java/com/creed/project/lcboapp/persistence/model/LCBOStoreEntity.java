@@ -4,7 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "STORE")
@@ -33,7 +33,7 @@ public class LCBOStoreEntity {
     private String longitude;
 
     @Column(name = "UPDATED_AT", nullable = false)
-    private Date updatedAt;
+    private LocalDateTime updatedAt;
 
     /**
      * Default Constructor
@@ -56,7 +56,7 @@ public class LCBOStoreEntity {
 
     public String getLongitude() { return longitude; }
 
-    public Date getUpdatedAt() { return updatedAt; }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
 
     public void setId(final Long id) { this.id = id; }
 
@@ -72,7 +72,7 @@ public class LCBOStoreEntity {
 
     public void setLongitude(final String longitude) { this.longitude = longitude; }
 
-    public void setUpdatedAt(final Date updatedAt) { this.updatedAt = updatedAt; }
+    public void setUpdatedAt(final LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 
     @Override
     public String toString() {
