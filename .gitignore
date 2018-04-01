@@ -3,3 +3,5 @@
 target/
 src/main/resources/download/
 src/main/resources/working/
+src/main/resources/backup/
+src/test/resources/working/
