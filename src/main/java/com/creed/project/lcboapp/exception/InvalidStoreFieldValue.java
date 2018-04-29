@@ -1,5 +1,8 @@
 package com.creed.project.lcboapp.exception;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 public class InvalidStoreFieldValue extends GenericException {
 
     private static final String FATAL_STRING = "Fatal";
@@ -8,7 +11,7 @@ public class InvalidStoreFieldValue extends GenericException {
     private static final String FIELDVALUE_STRING = "FieldValue";
     private static final String FILE_PROCESS_FAIL = "File cannot be processed.";
 
-    private static final String INVALID_VALUE_FOUND = "Invalid value found while processing product file. ";
+    private static final String INVALID_VALUE_FOUND = "Invalid value found while processing store file. ";
 
     public InvalidStoreFieldValue(final String fieldName, final String fieldValue) {
         super("48", FATAL_STRING, INVALID_VALUE_FOUND + FIELDNAME_STRING + ": " + fieldName + " " + FIELDVALUE_STRING +
@@ -24,4 +27,16 @@ public class InvalidStoreFieldValue extends GenericException {
         super("48", FATAL_STRING, INVALID_VALUE_FOUND + FIELDNAME_STRING + ": " + fieldName + " " + FIELDVALUE_STRING +
                 ": " + fieldValue + " " + FILE_PROCESS_FAIL);
     }
+
+    public InvalidStoreFieldValue(String fieldName, LocalDate fieldValue) {
+        super("48", FATAL_STRING, INVALID_VALUE_FOUND + FIELDNAME_STRING + ": " + fieldName + " " + FIELDVALUE_STRING +
+                ": " + fieldValue + " " + FILE_PROCESS_FAIL);
+    }
+
+    public InvalidStoreFieldValue(final String fieldName, final LocalDateTime fieldValue) {
+        super("48", FATAL_STRING, INVALID_VALUE_FOUND + FIELDNAME_STRING + ": " + fieldName + " " + FIELDVALUE_STRING +
+                ": " + fieldValue + " " + FILE_PROCESS_FAIL);
+    }
+
+
 }

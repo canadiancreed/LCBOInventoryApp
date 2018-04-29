@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Scope;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.regex.Pattern;
 
 @Scope(value = "step")
 public class ProductItemFieldSetMapper implements FieldSetMapper<LCBOProduct> {
@@ -52,14 +54,23 @@ public class ProductItemFieldSetMapper implements FieldSetMapper<LCBOProduct> {
         entity.setSecondaryCategory(fieldSet.readString(IDX_SECONDARY_CATEGORY));
         entity.setOrigin(fieldSet.readString(IDX_ORIGIN));
         entity.setProducerName(fieldSet.readString(IDX_PRODUCER_NAME));
-        entity.setReleasedOn(LocalDate.parse(fieldSet.readRawString(IDX_RELEASED_ON)));
+
+        //todo - setReleasedOn fails if the field is empty. Change to String instead of LocalDate?
+//        entity.setReleasedOn(LocalDate.parse(fieldSet.readRawString(IDX_RELEASED_ON)));
 //        entity.setReleasedOn(fieldSet.readDate(IDX_RELEASED_ON, "yyyy-MM-dd"));
-        entity.setUpdatedAt(LocalDateTime.parse(fieldSet.readRawString(IDX_UPDATED_AT)));
+        entity.setUpdatedAt(parseDateTime(fieldSet.readRawString(IDX_UPDATED_AT)));
 //        entity.setImageUrl(fieldSet.readString(IDX_IMAGE_URL));
 //        entity.setVarietal(fieldSet.readString(IDX_VARIETAL));
 //        entity.setStyle(fieldSet.readString(IDX_STYLE));
 //        entity.setTertiaryCategory(fieldSet.readString(IDX_TERTIARY_CATEGORY));
 
         return entity;
+    }
+
+    private LocalDateTime parseDateTime(final String localDateTimeString) {
+
+        String[] localDateTimeParsed = localDateTimeString.split(Pattern.quote("."));
+
+        return LocalDateTime.parse(localDateTimeParsed[0], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 }

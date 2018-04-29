@@ -37,9 +37,7 @@ public class LCBOInventory {
 
 	public LocalDate getUpdatedOn() { return updatedOn; }
 
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
+	public LocalDateTime getCreatedAt() { return createdAt; }
 
 	public LocalDateTime getUpdatedAt() { return updatedAt; }
 

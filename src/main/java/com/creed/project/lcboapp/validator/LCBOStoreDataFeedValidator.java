@@ -43,7 +43,8 @@ public final class LCBOStoreDataFeedValidator {
     //Can be blank
     private static void validateAddressLineTwo(final String addressLineTwo) {
         if (StringUtils.isBlank(addressLineTwo)) { return; }
-        throw new InvalidProductFieldValue("addressLineTwo", addressLineTwo);
+        if (StringUtils.isAsciiPrintable(addressLineTwo)) { return; }
+        throw new InvalidStoreFieldValue("addressLineTwo", addressLineTwo);
     }
 
     private static void validateCity(final String city) {
@@ -74,6 +75,6 @@ public final class LCBOStoreDataFeedValidator {
 
     private static void validateUpdatedAt(final LocalDateTime updatedAt) {
         if (UtilClass.validateDate(updatedAt)) { return; }
-        throw new InvalidInventoryFieldValue("updatedAt", updatedAt);
+        throw new InvalidStoreFieldValue("updatedAt", updatedAt);
     }
 }

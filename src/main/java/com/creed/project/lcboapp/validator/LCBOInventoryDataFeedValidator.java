@@ -3,6 +3,7 @@ package com.creed.project.lcboapp.validator;
 import com.creed.project.lcboapp.common.UtilClass;
 import com.creed.project.lcboapp.domain.LCBOInventory;
 import com.creed.project.lcboapp.exception.InvalidInventoryFieldValue;
+import com.creed.project.lcboapp.exception.InvalidStoreFieldValue;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDate;
@@ -41,17 +42,18 @@ public final class LCBOInventoryDataFeedValidator {
         throw new InvalidInventoryFieldValue("quantity", quantity);
     }
 
-    //todo Date classes can't throw custom exceptions without tests breaking
-
     private static void validateUpdatedOn(final LocalDate updatedOn) {
         if (UtilClass.validateDate(updatedOn)) { return; }
+        throw new InvalidInventoryFieldValue("updatedOn", updatedOn);
     }
 
     private static void validateUpdatedAt(final LocalDateTime updatedAt) {
         if (UtilClass.validateDate(updatedAt)) { return; }
+        throw new InvalidInventoryFieldValue("updatedAt", updatedAt);
     }
 
     private static void validateCreatedAt(final LocalDateTime createdAt) {
         if (UtilClass.validateDate(createdAt)) { return; }
+        throw new InvalidInventoryFieldValue("createdAt", createdAt);
     }
 }

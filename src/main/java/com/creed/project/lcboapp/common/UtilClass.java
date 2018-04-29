@@ -17,7 +17,7 @@ public class UtilClass {
             LocalDate.parse(dateValue.toString(), Constants.DATE_FORMAT);
             validatedDate = true;
         } catch (DateTimeParseException dtpe) {
-            //No action needed.
+            System.out.println(dtpe.getMessage());
         }
 
         return validatedDate;
@@ -26,11 +26,20 @@ public class UtilClass {
     public static boolean validateDate(final LocalDateTime dateValue) {
         boolean validatedDate = false;
 
+        String dateValueString = dateValue.toString();
+
+        String newDateString = dateValueString.replace("T", " ");
+
+        //todo for some reason it chops off seconds of the value is all zeros. This manualally reattachs the value
+        if (newDateString.length() == 16) {
+            newDateString = newDateString + ":00";
+        }
+
         try {
-            LocalDateTime.parse(dateValue.toString(), Constants.DATETIME_FORMAT);
+            LocalDateTime.parse(newDateString, Constants.DATETIME_FORMAT);
             validatedDate = true;
         } catch (DateTimeParseException dtpe) {
-            //No action needed.
+            System.out.println(dtpe.getMessage());
         }
 
         return validatedDate;

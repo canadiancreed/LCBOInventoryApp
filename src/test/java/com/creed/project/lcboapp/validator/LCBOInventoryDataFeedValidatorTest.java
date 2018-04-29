@@ -17,7 +17,7 @@ public class LCBOInventoryDataFeedValidatorTest {
 
     @Before
     public void setUp() throws Exception {
-        String data = "1,18,632,779,2011-01-05,2011-01-01 03:55:34.701772,2011-01-07 09:52:27.11259";
+        String data = "1,18,632,779,2011-01-05,2011-01-01 03:55:34,2011-01-07 09:52:27";
         String[] tokens = data.split(",");
 
         lcboInventoryObject = new LCBOInventory();
@@ -61,13 +61,37 @@ public class LCBOInventoryDataFeedValidatorTest {
 
     @Test(expected = DateTimeParseException.class)
     public void testValidateUpdatedAt() {
-        lcboInventoryObject.setUpdatedAt(LocalDateTime.parse("2011-01-07 99:52:27.11259", Constants.DATETIME_FORMAT));
+        lcboInventoryObject.setUpdatedAt(LocalDateTime.parse("2011-01-07 99:52:27", Constants.DATETIME_FORMAT));
+        LCBOInventoryDataFeedValidator.validateAllBizRules(lcboInventoryObject);
+    }
+
+    @Test(expected = DateTimeParseException.class)
+    public void testValidateUpdatedAtWithZeroSeconds() {
+        lcboInventoryObject.setUpdatedAt(LocalDateTime.parse("2011-01-07 99:52:00", Constants.DATETIME_FORMAT));
+        LCBOInventoryDataFeedValidator.validateAllBizRules(lcboInventoryObject);
+    }
+
+    @Test
+    public void testValidateUpdatedAtWithZeroSecondsNoExp() {
+        lcboInventoryObject.setUpdatedAt(LocalDateTime.parse("2011-01-07 09:52:00", Constants.DATETIME_FORMAT));
         LCBOInventoryDataFeedValidator.validateAllBizRules(lcboInventoryObject);
     }
 
     @Test(expected = DateTimeParseException.class)
     public void testValidateCreatedAt() {
-        lcboInventoryObject.setCreatedAt(LocalDateTime.parse("2011-01-01 99:55:34.701772", Constants.DATETIME_FORMAT));
+        lcboInventoryObject.setCreatedAt(LocalDateTime.parse("2011-01-01 99:55:34", Constants.DATETIME_FORMAT));
+        LCBOInventoryDataFeedValidator.validateAllBizRules(lcboInventoryObject);
+    }
+
+    @Test(expected = DateTimeParseException.class)
+    public void testValidateCreatedAtWithZeroSeconds() {
+        lcboInventoryObject.setCreatedAt(LocalDateTime.parse("2011-01-01 99:55:00", Constants.DATETIME_FORMAT));
+        LCBOInventoryDataFeedValidator.validateAllBizRules(lcboInventoryObject);
+    }
+
+    @Test
+    public void testValidateCreatedAtWithZeroSecondsNoExp() {
+        lcboInventoryObject.setCreatedAt(LocalDateTime.parse("2011-01-01 09:55:00", Constants.DATETIME_FORMAT));
         LCBOInventoryDataFeedValidator.validateAllBizRules(lcboInventoryObject);
     }
 }

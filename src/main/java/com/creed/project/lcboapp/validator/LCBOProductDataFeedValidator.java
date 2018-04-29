@@ -39,8 +39,11 @@ public final class LCBOProductDataFeedValidator {
         throw new InvalidProductFieldValue("id", id);
     }
 
+    //todo - Is there a way to skip over products with no name?
     private static void validateName(final String name){
-        if (StringUtils.isNotBlank(name)) { return; }
+        //if (StringUtils.isNotBlank(name)) { return; }
+        if (StringUtils.isBlank(name)) { return; }
+        if (StringUtils.isAlphanumericSpace(name)) { return; }
         throw new InvalidProductFieldValue("name", name);
     }
 
@@ -56,34 +59,36 @@ public final class LCBOProductDataFeedValidator {
 
     private static void validatePrimaryCategory(final String primaryCategory){
         if (StringUtils.isBlank(primaryCategory)) { return; }
-
         if (StringUtils.isAlphanumericSpace(primaryCategory)) { return; }
         throw new InvalidProductFieldValue("primaryCategory", primaryCategory);
     }
 
     private static void validateSecondaryCategory(final String secondaryCategory){
         if (StringUtils.isBlank(secondaryCategory)) { return; }
+        if (StringUtils.isAsciiPrintable(secondaryCategory)) { return; }
         throw new InvalidProductFieldValue("secondaryCategory", secondaryCategory);
     }
 
     private static void validateOrigin(final String origin){
         if (StringUtils.isBlank(origin)) { return; }
+        if (StringUtils.isAsciiPrintable(origin)) { return; }
         throw new InvalidProductFieldValue("origin", origin);
     }
 
     private static void validateProducerName(final String producerName){
         if (StringUtils.isBlank(producerName)) { return; }
+        if (StringUtils.isAsciiPrintable(producerName)) { return; }
         throw new InvalidProductFieldValue("producerName", producerName);
     }
 
     private static void validateReleasedOn(final LocalDate releasedOn){
         if (UtilClass.validateDate(releasedOn)) { return; }
-        throw new InvalidInventoryFieldValue("releasedOn", releasedOn);
+        throw new InvalidProductFieldValue("releasedOn", releasedOn);
     }
 
     private static void validateUpdatedAt(final LocalDateTime updatedAt){
         if (UtilClass.validateDate(updatedAt)) { return; }
-        throw new InvalidInventoryFieldValue("updatedAt", updatedAt);
+        throw new InvalidProductFieldValue("updatedAt", updatedAt);
     }
 
     //Optional

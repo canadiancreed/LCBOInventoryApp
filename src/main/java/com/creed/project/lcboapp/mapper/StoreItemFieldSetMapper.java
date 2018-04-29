@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.validation.BindException;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.regex.Pattern;
 
 @Scope(value = "step")
 public class StoreItemFieldSetMapper implements FieldSetMapper<LCBOStore> {
@@ -32,8 +34,15 @@ public class StoreItemFieldSetMapper implements FieldSetMapper<LCBOStore> {
         entity.setPostalCode(fieldSet.readString(IDX_POSTAL_CODE));
         entity.setLatitude(fieldSet.readString(IDX_LATITUDE));
         entity.setLongitude(fieldSet.readString(IDX_LONGITUDE));
-        entity.setUpdatedAt(LocalDateTime.parse(fieldSet.readRawString(IDX_UPDATED_AT)));
+        entity.setUpdatedAt(parseDateTime(fieldSet.readRawString(IDX_UPDATED_AT)));
 
         return entity;
+    }
+
+    private LocalDateTime parseDateTime(final String localDateTimeString) {
+
+        String[] localDateTimeParsed = localDateTimeString.split(Pattern.quote("."));
+
+        return LocalDateTime.parse(localDateTimeParsed[0], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 }

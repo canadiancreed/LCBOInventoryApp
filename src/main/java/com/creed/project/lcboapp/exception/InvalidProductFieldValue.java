@@ -1,5 +1,7 @@
 package com.creed.project.lcboapp.exception;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class InvalidProductFieldValue extends GenericException {
@@ -36,7 +38,13 @@ public class InvalidProductFieldValue extends GenericException {
                 FILE_PROCESS_FAIL);
     }
 
-    public InvalidProductFieldValue(final String fieldName, final Date fieldValue) {
+    public InvalidProductFieldValue(final String fieldName, final LocalDate fieldValue) {
+        super("48", FATAL_STRING, INVALID_VALUE_FOUND +
+                FIELDNAME_STRING + ": " + fieldName + " " + FIELDVALUE_STRING + ": " + fieldValue + " " +
+                FILE_PROCESS_FAIL);
+    }
+
+    public InvalidProductFieldValue(final String fieldName, final LocalDateTime fieldValue) {
         super("48", FATAL_STRING, INVALID_VALUE_FOUND +
                 FIELDNAME_STRING + ": " + fieldName + " " + FIELDVALUE_STRING + ": " + fieldValue + " " +
                 FILE_PROCESS_FAIL);
