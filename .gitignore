@@ -5,3 +5,6 @@ src/main/resources/download/
 src/main/resources/working/
 src/main/resources/backup/
 src/test/resources/working/
+lcboinventorytracker/src/main/resources/backup/
+lcboinventorytracker/src/main/resources/download/1.zip
+lcboinventorytracker/src/main/resources/working/
