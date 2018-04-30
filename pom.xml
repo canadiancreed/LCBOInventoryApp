@@ -13,6 +13,7 @@
     <modules>
         <module>LCBOInventoryTracker</module>
         <module>LCBOInventoryWebsite</module>
+        <module>LCBOInventoryLibrary</module>
     </modules>
 
     <properties>
