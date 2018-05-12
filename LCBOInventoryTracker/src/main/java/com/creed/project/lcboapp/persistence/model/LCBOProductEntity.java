@@ -15,7 +15,7 @@ public class LCBOProductEntity {
     @Column(name = "ID", nullable = false)
     private Long id;
 
-    @Column(name = "NAME", nullable = false)
+    @Column(name = "NAME")
     private String name;
 
     @Column(name = "PRICE_IN_CENTS", nullable = false)
@@ -36,7 +36,7 @@ public class LCBOProductEntity {
     @Column(name = "PRODUCER_NAME", nullable = false)
     private String producerName;
 
-    @Column(name = "RELEASED_ON", nullable = false)
+    @Column(name = "RELEASED_ON")
     private LocalDate releasedOn;
 
     @Column(name = "UPDATED_AT", nullable = false)

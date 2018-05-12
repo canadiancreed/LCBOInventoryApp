@@ -68,9 +68,7 @@ public class LCBOProduct {
 
 	public LocalDate getReleasedOn() { return releasedOn; }
 
-	public LocalDateTime getUpdatedAt() {
-		return updatedAt;
-	}
+	public LocalDateTime getUpdatedAt() { return updatedAt; 	}
 
 	public String getImageOrl() {
 		return imageUrl;
