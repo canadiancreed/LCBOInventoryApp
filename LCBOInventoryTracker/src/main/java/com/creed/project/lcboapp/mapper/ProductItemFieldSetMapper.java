@@ -54,10 +54,7 @@ public class ProductItemFieldSetMapper implements FieldSetMapper<LCBOProduct> {
         entity.setSecondaryCategory(fieldSet.readString(IDX_SECONDARY_CATEGORY));
         entity.setOrigin(fieldSet.readString(IDX_ORIGIN));
         entity.setProducerName(fieldSet.readString(IDX_PRODUCER_NAME));
-
-        //todo - setReleasedOn fails if the field is empty. Change to String instead of LocalDate?
-//        entity.setReleasedOn(LocalDate.parse(fieldSet.readRawString(IDX_RELEASED_ON)));
-//        entity.setReleasedOn(fieldSet.readDate(IDX_RELEASED_ON, "yyyy-MM-dd"));
+        entity.setReleasedOn(parseDate(fieldSet.readRawString(IDX_RELEASED_ON)));
         entity.setUpdatedAt(parseDateTime(fieldSet.readRawString(IDX_UPDATED_AT)));
 //        entity.setImageUrl(fieldSet.readString(IDX_IMAGE_URL));
 //        entity.setVarietal(fieldSet.readString(IDX_VARIETAL));
@@ -65,6 +62,25 @@ public class ProductItemFieldSetMapper implements FieldSetMapper<LCBOProduct> {
 //        entity.setTertiaryCategory(fieldSet.readString(IDX_TERTIARY_CATEGORY));
 
         return entity;
+    }
+
+    /**
+     * This is created to handle the possibility that there's no value for the submitted time in the csv file.
+     * If so, it returns the dummy date 0999-12-31 for all date values to validate correctly, as there's no chance
+     * this will bne used
+     *
+     * @param localDateString
+     * @return
+     */
+    private LocalDate parseDate(final String localDateString) {
+
+        LocalDate localDateReturnString = LocalDate.parse("0999-12-31", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+        if (!localDateString.isEmpty()) {
+            localDateReturnString = LocalDate.parse(localDateString, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        }
+
+        return localDateReturnString;
     }
 
     private LocalDateTime parseDateTime(final String localDateTimeString) {

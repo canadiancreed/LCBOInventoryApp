@@ -143,6 +143,7 @@ public class TransactionRepository {
     public void beginFeedTransaction(final String feedId) {
         LCBOAppFeedEntity entity = new LCBOAppFeedEntity();
         BeanUtils.copyProperties(entity, feedEntity);
+
         trailFeedTransaction(feedId, ETLStatus.STARTED);
     }
 

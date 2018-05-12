@@ -2,9 +2,10 @@ package com.creed.project.lcboapp.validator;
 
 import com.creed.project.lcboapp.common.UtilClass;
 import com.creed.project.lcboapp.domain.LCBOProduct;
-import com.creed.project.lcboapp.exception.InvalidInventoryFieldValue;
 import com.creed.project.lcboapp.exception.InvalidProductFieldValue;
+import com.creed.project.lcboapp.exception.InvalidStoreFieldValue;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -27,7 +28,10 @@ public final class LCBOProductDataFeedValidator {
         validateSecondaryCategory(entity.getSecondaryCategory());
         validateOrigin(entity.getOrigin());
         validateProducerName(entity.getProducerName());
+        validateReleasedOn(entity.getReleasedOn());
         validateUpdatedAt(entity.getUpdatedAt());
+
+        //New Product file only
         validateImageUrl(entity.getImageOrl());
         validateVarietal(entity.getVarietal());
         validateStyle(entity.getStyle());
@@ -39,27 +43,26 @@ public final class LCBOProductDataFeedValidator {
         throw new InvalidProductFieldValue("id", id);
     }
 
-    //todo - Is there a way to skip over products with no name?
-    private static void validateName(final String name){
-        //if (StringUtils.isNotBlank(name)) { return; }
+    //todo - Is there a way to skip over products with no name? Right now it'll jsut stay as always valid
+    private static void validateName(final String name) {
         if (StringUtils.isBlank(name)) { return; }
-        if (StringUtils.isAlphanumericSpace(name)) { return; }
+        if (StringUtils.isAsciiPrintable(name)) { return; }
         throw new InvalidProductFieldValue("name", name);
     }
 
-    private static void validatePriceInCents(final Double priceInCents){
-        if (StringUtils.isNotBlank(priceInCents.toString())) { return; }
+    private static void validatePriceInCents(final Double priceInCents) {
+        if (priceInCents > 0.0) { return; }
         throw new InvalidProductFieldValue("priceInCents", priceInCents);
     }
 
-    private static void validateRegularPriceInCents(final Double regularPriceInCents){
-        if (StringUtils.isNotBlank(regularPriceInCents.toString())) { return; }
+    private static void validateRegularPriceInCents(final Double regularPriceInCents) {
+        if (regularPriceInCents > 0.0) { return; }
         throw new InvalidProductFieldValue("regularPriceInCents", regularPriceInCents);
     }
 
     private static void validatePrimaryCategory(final String primaryCategory){
         if (StringUtils.isBlank(primaryCategory)) { return; }
-        if (StringUtils.isAlphanumericSpace(primaryCategory)) { return; }
+        if (StringUtils.isAsciiPrintable(primaryCategory)) { return; }
         throw new InvalidProductFieldValue("primaryCategory", primaryCategory);
     }
 
@@ -95,29 +98,25 @@ public final class LCBOProductDataFeedValidator {
 
     private static void validateImageUrl(final String imageUrl){
         if (StringUtils.isBlank(imageUrl)) { return; }
-
-        if (StringUtils.isAlphanumericSpace(imageUrl)) { return; }
+        if (StringUtils.isAsciiPrintable(imageUrl)) { return; }
         throw new InvalidProductFieldValue("imageUrl", imageUrl);
     }
 
     private static void validateVarietal(final String varietal){
         if (StringUtils.isBlank(varietal)) { return; }
-
-        if (StringUtils.isAlphanumericSpace(varietal)) { return; }
+        if (StringUtils.isAsciiPrintable(varietal)) { return; }
         throw new InvalidProductFieldValue("varietal", varietal);
     }
 
     private static void validateStyle(final String style){
         if (StringUtils.isBlank(style)) { return; }
-
-        if (StringUtils.isAlphanumericSpace(style)) { return; }
+        if (StringUtils.isAsciiPrintable(style)) { return; }
         throw new InvalidProductFieldValue("style", style);
     }
 
     private static void validateTertiaryCategory(final String tertiaryCategory){
         if (StringUtils.isBlank(tertiaryCategory)) { return; }
-
-        if (StringUtils.isAlphanumericSpace(tertiaryCategory)) { return; }
+        if (StringUtils.isAsciiPrintable(tertiaryCategory)) { return; }
         throw new InvalidProductFieldValue("tertiaryCategory", tertiaryCategory);
     }
 }

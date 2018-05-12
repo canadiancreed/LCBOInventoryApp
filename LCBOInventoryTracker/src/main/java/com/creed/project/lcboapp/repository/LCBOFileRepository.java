@@ -205,7 +205,7 @@ public class LCBOFileRepository {
         //If there's anything in jobContext, add +1. If there's nothing, check the archive directory and get the latest
         // file. If there is, get the most recent file. If there's none, populate with 1
 
-        newZipFileName = listFilesForFolder(environment.getRequiredProperty(Constants.PROP_LCBO_FEED_ARCHIVE_DIR));
+        newZipFileName = listFilesForFolder(environment.getRequiredProperty(Constants.PROP_LCBO_FEED_DOWNLOAD_DIR));
 
         if (!newZipFileName.isEmpty()) {
             //get current value and increment it by one
@@ -243,19 +243,21 @@ public class LCBOFileRepository {
      * It performs the following actions
      * - Unpacks the downloaded file
      * - Export all unpacked files to the working directory
+     *
+     * Ordered from typically largest to smallest file, with inventory being last
      */
     public void unpackLatestLCBODataFile(final String zipFileName) throws FileNotFoundException {
         if (doesFileExist(zipFileName)) {
             currentLCBOFilesRepository.clear();
-            currentLCBOFilesRepository.put("inventories.csv", new File(
-                                        environment.getRequiredProperty(Constants.PROP_LCBO_FEED_WORKING_DIR) +
-                                                    "inventories.csv"));
-            currentLCBOFilesRepository.put("products.csv", new File(
-                    environment.getRequiredProperty(Constants.PROP_LCBO_FEED_WORKING_DIR) +
-                            "products.csv"));
             currentLCBOFilesRepository.put("stores.csv", new File(
                     environment.getRequiredProperty(Constants.PROP_LCBO_FEED_WORKING_DIR) +
                             "stores.csv"));
+            currentLCBOFilesRepository.put("products.csv", new File(
+                    environment.getRequiredProperty(Constants.PROP_LCBO_FEED_WORKING_DIR) +
+                            "products.csv"));
+            currentLCBOFilesRepository.put("inventories.csv", new File(
+                    environment.getRequiredProperty(Constants.PROP_LCBO_FEED_WORKING_DIR) +
+                            "inventories.csv"));
             //unpackFile(zipFileName);
         } else {
             throw new FileNotFoundException("File to unpack does not exists. Aborting.");
@@ -333,9 +335,15 @@ public class LCBOFileRepository {
         }
     }
 
+    /**
+     * List all files within the folder name provided.
+     *
+     * @param folderName
+     * @return
+     */
     private String listFilesForFolder(final String folderName) {
         TreeSet<String> fileNameList = new TreeSet<>();
-        String latestFileName;
+        String latestFileName = "";
 
         File folder = new File(folderName);
 
@@ -347,8 +355,6 @@ public class LCBOFileRepository {
 
         if (!fileNameList.isEmpty()) {
             latestFileName = fileNameList.last();
-        } else {
-            latestFileName = "";
         }
 
         return latestFileName;

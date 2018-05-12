@@ -5,8 +5,6 @@ import com.creed.project.lcboapp.persistence.model.LCBOProductEntity;
 import com.creed.project.lcboapp.repository.DataRepository;
 import com.creed.project.lcboapp.repository.TransactionRepository;
 import com.creed.project.lcboapp.validator.LCBOProductDataFeedValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -34,15 +32,31 @@ public class ProductItemProcessor implements ItemProcessor<LCBOProduct, LCBOProd
         LCBOProductEntity lcboProductEntity = new LCBOProductEntity();
 
         lcboProductEntity.setId(product.getId());
-        lcboProductEntity.setName(product.getName());
+
+        //Addresses if name is blank, which we get for some reason
+        if (product.getName().isEmpty()) {
+            lcboProductEntity.setName("Unknown");
+        } else {
+            lcboProductEntity.setName(product.getName());
+        }
+
         lcboProductEntity.setPriceInCents(product.getPriceInCents());
         lcboProductEntity.setRegularPriceInCents(product.getRegularPriceInCents());
         lcboProductEntity.setPrimaryCategory(product.getPrimaryCategory());
         lcboProductEntity.setSecondaryCategory(product.getSecondaryCategory());
         lcboProductEntity.setOrigin(product.getOrigin());
         lcboProductEntity.setProducerName(product.getProducerName());
-        lcboProductEntity.setReleasedOn(product.getReleasedOn());
+
+        //Sometimes ReleaseOn date can be blank, which we've given the value 0999-12-31. Convert to null for DB
+        if (product.getReleasedOn().getYear() == 999) {
+            lcboProductEntity.setReleasedOn(null);
+        } else {
+            lcboProductEntity.setReleasedOn(product.getReleasedOn());
+        }
+
         lcboProductEntity.setUpdatedAt(product.getUpdatedAt());
+
+        //New product files only
         lcboProductEntity.setImageUrl(product.getImageOrl());
         lcboProductEntity.setVarietal(product.getVarietal());
         lcboProductEntity.setStyle(product.getStyle());
