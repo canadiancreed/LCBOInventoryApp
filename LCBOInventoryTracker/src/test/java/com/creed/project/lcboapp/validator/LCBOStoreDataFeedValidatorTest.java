@@ -1,19 +1,14 @@
 package com.creed.project.lcboapp.validator;
 
 import com.creed.project.lcboapp.common.Constants;
-import com.creed.project.lcboapp.domain.LCBOInventory;
 import com.creed.project.lcboapp.domain.LCBOStore;
-import com.creed.project.lcboapp.exception.InvalidInventoryFieldValue;
 import com.creed.project.lcboapp.exception.InvalidStoreFieldValue;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
-
-import static org.junit.Assert.*;
 
 public class LCBOStoreDataFeedValidatorTest {
 
