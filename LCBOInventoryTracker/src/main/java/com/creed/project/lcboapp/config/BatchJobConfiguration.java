@@ -40,9 +40,9 @@ public class BatchJobConfiguration {
      *
      * @param feedFileDownloading
      * @param feedFileUnpacking
-//     * @param feedInventoryFileTransforming
+     * @param feedInventoryFileTransforming
      * @param feedProductFileTransforming
-//     * @param feedStoreFileTransforming
+     * @param feedStoreFileTransforming
      * @param feedFileLoading
      * @param feedFileArchiving
      * @param listener
