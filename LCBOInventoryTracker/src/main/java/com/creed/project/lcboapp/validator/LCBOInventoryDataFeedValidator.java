@@ -53,6 +53,7 @@ public final class LCBOInventoryDataFeedValidator {
     }
 
     private static void validateCreatedAt(final LocalDateTime createdAt) {
+        if (createdAt == null) { return; }
         if (UtilClass.validateDate(createdAt)) { return; }
         throw new InvalidInventoryFieldValue("createdAt", createdAt);
     }
