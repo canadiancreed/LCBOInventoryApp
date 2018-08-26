@@ -18,6 +18,8 @@ import org.springframework.core.env.Environment;
 import java.util.EnumMap;
 import java.util.Map;
 
+import static org.springframework.batch.item.file.transform.DelimitedLineTokenizer.DELIMITER_COMMA;
+
 /**
  * Reader configurations for various types of data files
  */

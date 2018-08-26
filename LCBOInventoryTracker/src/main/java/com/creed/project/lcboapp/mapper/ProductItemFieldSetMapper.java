@@ -23,8 +23,6 @@ public class ProductItemFieldSetMapper implements FieldSetMapper<LCBOProduct> {
          * Else it's the new version.
          */
 
-        System.out.println(fieldSet);
-
         if (fieldSet.getFieldCount() == 41) {
             //Old version
             final int IDX_ID = 0;

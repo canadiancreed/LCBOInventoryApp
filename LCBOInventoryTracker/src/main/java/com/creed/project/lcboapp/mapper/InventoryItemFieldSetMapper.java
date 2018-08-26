@@ -14,8 +14,6 @@ import java.util.regex.Pattern;
 @Scope(value = "step")
 public class InventoryItemFieldSetMapper implements FieldSetMapper<LCBOInventory> {
 
-
-
     @Override
     public LCBOInventory mapFieldSet(final FieldSet fieldSet) throws BindException {
 
@@ -55,10 +53,8 @@ public class InventoryItemFieldSetMapper implements FieldSetMapper<LCBOInventory
             entity.setStoreID(fieldSet.readInt(IDX_STORE_ID));
             entity.setQuantity(fieldSet.readInt(IDX_QUANTITY));
             entity.setUpdatedOn(LocalDate.parse(fieldSet.readRawString(IDX_REPORTED_ON)));
-            entity.setCreatedAt(null);
             entity.setUpdatedAt(parseDateTime(fieldSet.readRawString(IDX_UPDATED_AT)));
         }
-
 
         return entity;
     }

@@ -25,7 +25,7 @@ public class LCBOInventoryEntity {
     @Column(name = "UPDATED_ON", nullable = false)
     private LocalDate updatedOn;
 
-    @Column(name = "CREATED_AT", nullable = false)
+    @Column(name = "CREATED_AT")
     private LocalDateTime createdAt;
 
     @Column(name = "UPDATED_AT", nullable = false)
